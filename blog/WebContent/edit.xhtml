@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/templates/maintemplate.xhtml">
+	<f:metadata>
+		<f:viewParam name="blogID" required="true" 
+		requiredMessage="Expecting a valid blogID" 
+		value="#{blogcontroller.blogID}" 
+		converter="javax.faces.Integer"
+		converterMessage="Blog id must be an integer" />
+	</f:metadata>
+	<ui:define name="title">Blog Item Editor</ui:define>
+	<ui:define name="content">
+	
+	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
+		<h:form>
+			<p:messages showDetail="true" autoUpdate="true"/> 
+		
+			<p:panel id="panel" header="Edit Blog Entry" rendered="#{blogcontroller.blog != null}">
+				
+				<h:panelGrid columns="2">
+					<h:outputLabel for="blogtitle" value="Title" />
+					<p:inputText id="blogtitle" value="#{blogcontroller.blog.title}" required="true"/>
+				
+					<h:outputLabel for="blogbody" value="Body"  />
+					<p:inputTextarea id="blogbody" style="width:600px" value="#{blogcontroller.blog.body}" required="true"/>
+				
+					<h:outputLabel for="blogCategories" value="Select Categories"/>
+					<h:selectManyCheckbox id="blogCategories" value="#{blogcontroller.blog.categories}">
+						<f:selectItems value="#{blogentryglobal.categoriesMap}" />
+					</h:selectManyCheckbox>
+				</h:panelGrid>
+				
+				<f:facet name="footer">
+					<p:commandButton value="Save" actionListener="#{blogcontroller.saveBlog}" />
+				</f:facet>
+			</p:panel>
+
+		</h:form>				
+	</div>
+	</ui:define>
+	<ui:define name="urightcol">
+		<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
+			<h:form>
+			<p:dataTable value="#{blogentryglobal.categories}" var="cat">
+				<p:column>  
+					<f:facet name="header">
+							<h:outputText value="Categories" />
+					</f:facet>
+					<h:link outcome="category" value="#{cat.name}">
+						<f:param name="cat" value="#{cat.id}"></f:param>
+					</h:link>
+				</p:column> 
+			</p:dataTable>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,90 @@
+
+body {
+  margin: 0px;
+  padding: 0px;
+  top: 0px;
+  bottom: 0px;
+  font-family: Arial,Helvetica,sans-serif;
+  right: 0px;
+  left: 0px;
+  font-size: small;
+}
+
+#uheader {
+  width: 100%;
+}
+
+.uheadercell {
+	background-image: url("#{resource['images:header_center.png']}");
+}
+
+#uleftcol {
+  float: left;
+  width: 3%;
+  min-height: 500px;
+  font-size: small;
+}
+#ucontent {
+  width: 80%;
+  float: right;
+  min-height: 500px;
+  font-size: small;
+  border-right-width: 1px;
+  border-left-width: 0px;
+  border-top-width: 0px;
+  border-bottom-width: 0px;
+}
+#urightcol {
+  float: right;
+  width: 16%;
+  min-height: 500px;
+  font-size: small;
+}
+#ufooter {
+  font-size: small;
+  clear: both;
+  font-family: Arial,Helvetica,sans-serif;
+  width: 73%;
+  margin: 0 auto;
+  height: 35px;
+}
+#ufooter .copyright {
+	float: left;
+}
+#ufooter p {
+ margin: 0;
+ padding: 0 10 0 10;
+ text-align: center;
+ vertical-align: bottom;
+}
+
+
+h1 {
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: medium;
+  font-weight: bold;
+  text-align: left;
+}
+
+.blogHeader {
+  text-decoration: none; !important 
+}
+
+.ui-panel .ui-panel-titlebar {
+    padding: 0.5em 1em 0.5em;   
+}
+
+.mainblog .ui-datatable-data {
+  padding: 10px;
+}
+
+.mainblog .ui-datatable-data tr {
+        border: 0px;
+        background: none;
+        
+}       
+.ui-datatable .ui-datatable-data td {
+border: 0px;
+}
+
+	

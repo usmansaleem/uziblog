@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<f:view contentType="text/html">
+	<h:head>
+		<title>Usman Saleem - <ui:insert name="title">Java, J2EE, JEE Blog</ui:insert>
+		</title>
+        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/themes/uzi/theme.css" />
+		<h:outputStylesheet name="uzi.css" library="css" />
+		<ui:insert name="highlight">
+			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shCore.js"></script>
+			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shBrushBash.js"></script>
+			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shBrushJava.js"></script>
+			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shBrushSql.js"></script>
+			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shBrushCpp.js"></script>
+		</ui:insert>
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/syntax/styles/shCore.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/syntax/styles/shThemeDefault.css" />
+        <!-- overriding for blog entries tables -->
+		<style type="text/css">		
+		.ui-datatable .ui-datatable-data td {
+			border: 0px;
+		}
+		
+		.ui-panel .ui-panel-titlebar {
+			padding: 0.5em 1em 0.5em;	
+		}
+	</style>
+        <ui:insert name="head"></ui:insert>
+	</h:head>
+	<h:body>
+		
+		<div id="uheader">
+			<table
+				style="text-align: left; width: 100%; margin-left: auto; margin-right: auto;"
+				border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td class="uheadercell" colspan="2" style="vertical-align: top;"><h:graphicImage
+								name="header_left.png" library="images" alt="Usman Saleem"></h:graphicImage>
+						</td>
+						<td class="uheadercell"
+							style="vertical-align: top; text-align: right;"><h:graphicImage
+								name="header_right.png" library="images" alt="Java HelloWorld"></h:graphicImage>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui-widget ui-widget-content" colspan="3" style="vertical-align: bottom;">
+						    <div style="float: left;">
+						       <p:button outcome="index" value="Home" />
+						       <p:button outcome="archive" value="Archive" />
+						       <p:button outcome="lectures" value="Lectures" />
+						       <p:button outcome="about" value="About" />
+						       <p:button outcome="new" rendered="#{p:ifGranted('blogadmin')}" value="New Blog Entry" />
+						    </div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div id="uleftcol"></div>
+		<div id="urightcol" class="ui-widget">  
+			<ui:insert name="urightcol"></ui:insert>
+		 
+		    <div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
+				<h:form>
+				<p:dataTable value="#{blogentryglobal.categories}" var="cat">
+					<p:column>  
+						<f:facet name="header">
+								<h:outputText value="Categories" />
+						</f:facet>
+						<h:link outcome="category" value="#{cat.name}">
+							<f:param name="cat" value="#{cat.id}"></f:param>
+						</h:link>
+					</p:column> 
+				</p:dataTable>
+				</h:form>
+			</div>
+			
+			<div id="links" class="ui-datatable ui-widget" style="width: 90%; margin-left: auto; margin-right: auto; padding-bottom: 2em">
+				<table>
+					<thead>
+						<tr>
+							<th class="ui-state-default">Links</th>
+						</tr>
+					</thead>
+					
+					<tbody class="ui-datatable-data">
+						<tr class="ui-widget-content">
+							<td>
+							<h:outputLink value="http://usmans.info/resume/usman_saleem_cv.pdf"><h:graphicImage name="resume_button_pdf.png" library="images"></h:graphicImage></h:outputLink></td>
+						</tr>
+						<tr class="ui-widget-content">
+							<td>
+								<a href="http://au.linkedin.com/in/usman">
+								<img src="http://www.linkedin.com/img/webpromo/btn_liprofile_blue_80x15.png" width="80" height="15" border="0" alt="View Usman Saleem's profile on LinkedIn" />
+							</a>
+						</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div id="poweredby" class="ui-datatable ui-widget" style="width: 90%; margin-left: auto; margin-right: auto; padding-bottom: 2em">
+				<table>
+					<thead>
+						<tr>
+							<th class="ui-state-default">Powered By</th>
+						</tr>
+					</thead>
+					
+					<tbody class="ui-datatable-data">
+						<tr class="ui-widget-content">
+							<td><a href="http://www.primefaces.org/" target="_blank">Primefaces (3.0.M2)</a></td>
+						</tr>
+						<tr class="ui-widget-content">
+							<td><a href="http://hsqldb.org/" target="_blank">HSQLDB 2.1</a></td>
+						</tr>
+						<tr class="ui-widget-content">
+							<td><h:outputLink value="http://www.caucho.com/"> <h:outputText value="#{blogentryglobal.serverInfo}" /></h:outputLink> </td>
+						</tr>
+						<tr class="ui-widget-content">
+							<td><h:outputText value="#{blogentryglobal.jsfTitle}" /> - <h:outputText value="#{blogentryglobal.jsfVersion}" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div id="ucontent" class="ui-widget">
+			<ui:insert name="content">You should not see this.</ui:insert>
+		</div>
+
+
+		<div id="ufooter" class="ui-widget ui-widget-header ui-widget-corner-all">
+		   <p class="copyright">
+			<a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
+			<img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/80x15.png" /></a>
+			<br />Usman Saleem. 2011
+			</p>
+			<p style="float: right;">
+				<a title="Document made with KompoZer" href="http://kompozer.net/"><img
+					style="border: 0px solid; width: 80px; height: 15px;"
+					alt="Document made with KompoZer"
+					src="http://kompozer.sourceforge.net/images/kompozer_80x15.png"
+					align="top"></img></a>
+				<a href="http://validator.w3.org/check?uri=referer"><img
+					src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0!"
+					height="31" width="88" /></a>
+				<a href="http://jigsaw.w3.org/css-validator/check/referer"><img style="border: 0; width: 88px; height: 31px"
+					src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+					alt="Valid CSS!" /></a>
+			</p>
+		</div>
+		
+		<script type="text/javascript">
+				 SyntaxHighlighter.config.stripBrs = true;
+				 SyntaxHighlighter.defaults['gutter'] = true;
+			     SyntaxHighlighter.all(); 
+		</script>
+
+	</h:body>
+	
+</f:view>
+</html>

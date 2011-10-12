@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/templates/maintemplate.xhtml">
+	<ui:define name="title">Login Area</ui:define>
+	<ui:define name="content">
+	<h1>Login Area</h1>
+	<p:panel rendered="#{p:ifGranted('blogadmin')}">
+		<h:outputText value="Welcome: #{p:remoteUser()}. You are already logged in." />
+	</p:panel>
+	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
+		<form action='j_security_check' method='post'>
+			<table>
+				<tr><td>User:</td><td><input name='j_username'></input></td></tr>
+				<tr><td>Password:</td><td><input name='j_password' type='password'></input></td></tr>
+				<tr><td><input type='submit'></input></td></tr>
+			</table>
+		</form>
+	</div>
+	</ui:define>
+</ui:composition>

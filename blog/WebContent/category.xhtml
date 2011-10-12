@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/templates/maintemplate.xhtml">
+	<f:metadata>
+		<f:viewParam required="true" requiredMessage="Expecting a valid categoryID" 
+		name="cat" value="#{blogcontroller.catID}" 	
+		converter="javax.faces.Integer"
+		converterMessage="Category id must be an integer"/>
+	</f:metadata>
+	
+	<ui:define name="title">Blog Entries by Category</ui:define>
+	<ui:define name="head">
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="#{request.contextPath}/rss?catID=#{blogcontroller.catID}" />
+	</ui:define>
+	<ui:define name="content">
+	
+	<h:outputLabel value="Category: #{blogcontroller.catName}"></h:outputLabel>
+	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
+		<h:form>
+		<p:messages showDetail="true" autoUpdate="true"/>		
+				<p:dataTable var="bl" value="#{blogcontroller.blogEntriesByCategory}" paginator="true" rows="10"
+		paginatorPosition="bottom" styleClass="mainblog" id="catblogs" dynamic="true"
+		paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+						<p:column>  
+							<f:facet name="header">
+							<h:outputText value="Uzi's Blog" />
+							</f:facet>
+							 <p:panel style="margin: 10px 0px 10px 0px;">
+									<f:facet name="header">
+										<h:link outcome="detail" value="" styleClass="ui-icon ui-icon-triangle-1-e" style="float: left;">
+											<f:param name="blogID" value="#{bl.id}"></f:param>
+										</h:link>
+										<h:link outcome="detail" value="#{bl.title}" styleClass="blogHeader">
+											<f:param name="blogID" value="#{bl.id}"></f:param>
+										</h:link>
+									</f:facet>
+									<h:outputText escape="false" value="#{bl.body}" />
+									<f:facet name="footer">
+										<h:outputText style="font-size: x-small;" value="Created On: #{bl.createdon}" />
+										<h:outputText style="font-size: x-small;" value = " | Categories: " />
+										<ui:repeat var="cat" value="#{bl.categories}">
+									 
+											<h:link style="font-size: x-small;" outcome="category" value="#{blogentryglobal.categoryByIdMap[cat]}">
+												<f:param name="cat" value="#{cat}"></f:param>
+											</h:link>
+										 	<h:outputText style="font-size: x-small;" value = ", " />
+											
+										</ui:repeat>
+										
+										<p:button outcome="edit" rendered="#{p:ifGranted('blogadmin')}" value="Edit">
+											<f:param name="blogID" value="#{bl.id}"></f:param>
+										</p:button>
+									</f:facet>
+							</p:panel>
+					    </p:column> 
+		
+				</p:dataTable>
+		</h:form>
+	</div>
+	</ui:define>
+</ui:composition>

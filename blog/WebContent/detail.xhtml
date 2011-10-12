@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/templates/maintemplate.xhtml">
+	<f:metadata>
+		<f:viewParam name="blogID" required="true" 
+		requiredMessage="Expecting a valid blogID" 
+		value="#{blogcontroller.blogID}" 
+		converter="javax.faces.Integer"
+		converterMessage="Blog id must be an integer" />	
+	</f:metadata>
+	<ui:define name="title">Blog Entry - <h:outputText value="#{blogcontroller.blog.title}"></h:outputText> </ui:define>
+	<ui:define name="content">
+	
+	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
+		<p:messages showDetail="true" autoUpdate="true"/> 
+		<p:panel header="#{blogcontroller.blog.title}">
+			<h:outputText escape="false" value="#{blogcontroller.blog.body}" />
+			<f:facet name="footer">
+				<h:outputText style="font-size: x-small;" value="Created On: #{blogcontroller.blog.createdon}" />
+				<h:outputText style="font-size: x-small;" value = " | Categories: " />
+				<ui:repeat var="cat" value="#{blogcontroller.blog.categories}">
+			 
+					<h:link style="font-size: x-small;" outcome="category" value="#{blogentryglobal.categoryByIdMap[cat]}">
+						<f:param name="cat" value="#{cat}"></f:param>
+					</h:link>
+				 	<h:outputText style="font-size: x-small;" value = ", " />
+					
+				</ui:repeat>
+			</f:facet>
+		</p:panel>		
+				
+	</div>
+	</ui:define>
+</ui:composition>

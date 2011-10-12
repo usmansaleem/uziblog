@@ -1,0 +1,88 @@
+
+body {
+  margin: 0px;
+  padding: 0px;
+  top: 0px;
+  bottom: 0px;
+  font-family: Arial,Helvetica,sans-serif;
+  right: 0px;
+  left: 0px;
+  font-size: small;
+}
+
+#uheader {
+  width: 100%;
+}
+#umenu {
+  border: 1px solid #000066;
+  margin: 1px;
+  padding: 1px 1px 1px 5%;
+  background-color: #acacd7;
+  right: 1px;
+  left: 1px;
+  font-size: small;
+  font-family: Arial,Helvetica,sans-serif;
+  top: 1px;
+  bottom: 1px;
+  height: 14px;
+  text-decoration: none;
+}
+#umenu a:hover {
+  text-decoration: underline;
+  color: black;
+  background-color: #cccccc;
+}
+#umenu a:link {
+  text-decoration: none;
+  color: black;
+}
+#umenu a:visited {
+  text-decoration: none;
+  color: black;
+}
+#umenu a:active {
+  text-decoration: none;
+  color: black;
+}
+#uleftcol {
+  float: left;
+  width: 1%;
+  min-height: 500px;
+  font-size: small;
+}
+#ucontent {
+  width: 84%;
+  float: right;
+  min-height: 500px;
+  font-size: small;
+  border-right-style: dashed;
+  border-right-width: 1px;
+}
+#urightcol {
+  float: right;
+  width: 13%;
+  min-height: 500px;
+  font-size: small;
+}
+#ufooter {
+  border-top: 1px dashed black;
+  background-image: none;
+  background-repeat: repeat;
+  background-attachment: scroll;
+  background-position:  0% 0%;
+  font-size: small;
+  clear: both;
+  font-family: Arial,Helvetica,sans-serif;
+  width: 100%;
+}
+#upowerby {
+	float: right;
+}
+
+h1 {
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: medium;
+  font-weight: bold;
+  text-align: left;
+  color: #000066;
+}
