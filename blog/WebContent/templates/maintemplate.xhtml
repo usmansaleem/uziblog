@@ -21,7 +21,7 @@
 		</ui:insert>
 		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/syntax/styles/shCore.css" />
         <link type="text/css" rel="stylesheet" href="#{request.contextPath}/syntax/styles/shThemeDefault.css" />
-        <!-- overriding for blog entries tables -->
+        <!-- overriding for blog entries tables
 		<style type="text/css">		
 		.ui-datatable .ui-datatable-data td {
 			border: 0px;
@@ -30,7 +30,8 @@
 		.ui-panel .ui-panel-titlebar {
 			padding: 0.5em 1em 0.5em;	
 		}
-	</style>
+		
+	</style-->
         <ui:insert name="head"></ui:insert>
 	</h:head>
 	<h:body>
@@ -53,8 +54,8 @@
 						<td class="ui-widget ui-widget-content" colspan="3" style="vertical-align: bottom;">
 						    <div style="float: left;">
 						       <p:button outcome="index" value="Home" />
-						       <p:button outcome="archive" value="Archive" />
-						       <p:button outcome="lectures" value="Lectures" />
+						       <p:button outcome="archive" value="Archives" />
+						       <p:button outcome="lectures" value="Notes" />
 						       <p:button outcome="about" value="About" />
 						       <p:button outcome="new" rendered="#{p:ifGranted('blogadmin')}" value="New Blog Entry" />
 						    </div>
@@ -87,22 +88,31 @@
 				<table>
 					<thead>
 						<tr>
-							<th class="ui-state-default">Links</th>
+							<th class="ui-state-default" style="padding-top: 2px; padding-bottom: 2px">Links</th>
 						</tr>
 					</thead>
 					
 					<tbody class="ui-datatable-data">
 						<tr class="ui-widget-content">
-							<td>
+							<td style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px">
 							<h:outputLink value="http://usmans.info/resume/usman_saleem_cv.pdf"><h:graphicImage name="resume_button_pdf.png" library="images"></h:graphicImage></h:outputLink></td>
 						</tr>
-						<tr class="ui-widget-content">
-							<td>
+						<tr class="ui-widget-content" >
+							<td style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px">
 								<a href="http://au.linkedin.com/in/usman">
 								<img src="http://www.linkedin.com/img/webpromo/btn_liprofile_blue_80x15.png" width="80" height="15" border="0" alt="View Usman Saleem's profile on LinkedIn" />
 							</a>
 						</td>
 						</tr>
+						<tr class="ui-widget-content" >
+							<td style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px">
+								<a href="https://github.com/usmansaleem"
+   								title="Follow usmansaleem on Github">
+   								<img src="https://github.com/favicon.ico" />Github Profile
+								</a>
+						</td>
+						</tr>
+						
 					</tbody>
 				</table>
 			</div>
@@ -111,22 +121,22 @@
 				<table>
 					<thead>
 						<tr>
-							<th class="ui-state-default">Powered By</th>
+							<th class="ui-state-default" style="padding-top: 2px; padding-bottom: 2px">Powered By</th>
 						</tr>
 					</thead>
 					
 					<tbody class="ui-datatable-data">
 						<tr class="ui-widget-content">
-							<td><a href="http://www.primefaces.org/" target="_blank">Primefaces (3.0.M2)</a></td>
+							<td style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px"><h:outputLink value="http://www.caucho.com/" target="_blank"> <h:outputText value="#{blogentryglobal.serverInfo}" /></h:outputLink> </td>
 						</tr>
 						<tr class="ui-widget-content">
-							<td><a href="http://hsqldb.org/" target="_blank">HSQLDB 2.1</a></td>
+							<td style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px"><h:outputText value="#{blogentryglobal.jsfTitle}" /> - <h:outputText value="#{blogentryglobal.jsfVersion}" /></td>
 						</tr>
 						<tr class="ui-widget-content">
-							<td><h:outputLink value="http://www.caucho.com/"> <h:outputText value="#{blogentryglobal.serverInfo}" /></h:outputLink> </td>
+							<td style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px"><a href="http://www.primefaces.org/" target="_blank">Primefaces (3.0.M3)</a></td>
 						</tr>
 						<tr class="ui-widget-content">
-							<td><h:outputText value="#{blogentryglobal.jsfTitle}" /> - <h:outputText value="#{blogentryglobal.jsfVersion}" /></td>
+							<td style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px"><a href="http://hsqldb.org/" target="_blank">HSQLDB 2.1</a></td>
 						</tr>
 					</tbody>
 				</table>

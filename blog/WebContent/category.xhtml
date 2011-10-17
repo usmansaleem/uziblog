@@ -16,29 +16,35 @@
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="#{request.contextPath}/rss?catID=#{blogcontroller.catID}" />
 	</ui:define>
 	<ui:define name="content">
-	
-	<h:outputLabel value="Category: #{blogcontroller.catName}"></h:outputLabel>
 	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
 		<h:form>
-		<p:messages showDetail="true" autoUpdate="true"/>		
-				<p:dataTable var="bl" value="#{blogcontroller.blogEntriesByCategory}" paginator="true" rows="10"
-		paginatorPosition="bottom" styleClass="mainblog" id="catblogs" dynamic="true"
+		<p:messages showDetail="true" autoUpdate="true"/>	
+		
+		<p:dataTable var="bl" value="#{blogcontroller.blogEntriesByCategory}" paginator="true" rows="10"
+		paginatorPosition="bottom" dynamic="false"
 		paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 						<p:column>  
 							<f:facet name="header">
-							<h:outputText value="Uzi's Blog" />
+							<h:outputText value="Uzi's Blog - #{blogcontroller.catName}" />
 							</f:facet>
-							 <p:panel style="margin: 10px 0px 10px 0px;">
-									<f:facet name="header">
+							<!-- header -->
+							
+							<div class="ui-panel-titlebar ui-widget-header ui-corner-all" style="padding-top: 5px; padding-bottom: 5px">
+							<span class="ui-panel-title">
 										<h:link outcome="detail" value="" styleClass="ui-icon ui-icon-triangle-1-e" style="float: left;">
 											<f:param name="blogID" value="#{bl.id}"></f:param>
 										</h:link>
 										<h:link outcome="detail" value="#{bl.title}" styleClass="blogHeader">
 											<f:param name="blogID" value="#{bl.id}"></f:param>
 										</h:link>
-									</f:facet>
-									<h:outputText escape="false" value="#{bl.body}" />
-									<f:facet name="footer">
+							</span>
+							</div>
+							<!-- body -->
+							<div style="padding: 15px">
+							<h:outputText escape="false" value="#{bl.body}" />
+							</div>
+							<!-- footer -->
+							<div class="ui-panel-footer ui-widget-content" style="padding-top: 5px; padding-bottom: 5px">
 										<h:outputText style="font-size: x-small;" value="Created On: #{bl.createdon}" />
 										<h:outputText style="font-size: x-small;" value = " | Categories: " />
 										<ui:repeat var="cat" value="#{bl.categories}">
@@ -53,8 +59,7 @@
 										<p:button outcome="edit" rendered="#{p:ifGranted('blogadmin')}" value="Edit">
 											<f:param name="blogID" value="#{bl.id}"></f:param>
 										</p:button>
-									</f:facet>
-							</p:panel>
+							</div>
 					    </p:column> 
 		
 				</p:dataTable>

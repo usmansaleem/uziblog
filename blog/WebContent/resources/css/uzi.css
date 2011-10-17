@@ -70,21 +70,7 @@ h1 {
   text-decoration: none; !important 
 }
 
-.ui-panel .ui-panel-titlebar {
-    padding: 0.5em 1em 0.5em;   
-}
 
-.mainblog .ui-datatable-data {
-  padding: 10px;
-}
 
-.mainblog .ui-datatable-data tr {
-        border: 0px;
-        background: none;
-        
-}       
-.ui-datatable .ui-datatable-data td {
-border: 0px;
-}
 
 	

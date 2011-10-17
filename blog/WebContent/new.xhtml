@@ -8,7 +8,7 @@
 	<ui:define name="content">
 	
 	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
-		<h:form>
+		<h:form rendered="#{p:ifGranted('blogadmin')}">
 			<p:messages showDetail="true" autoUpdate="true"/> 
 		
 			<p:panel id="panel" header="New Blog Entry" rendered="#{p:ifGranted('blogadmin')}">
