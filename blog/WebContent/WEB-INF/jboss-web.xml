@@ -1,0 +1,3 @@
+<jboss-web>
+    <security-domain>uziblog</security-domain>
+</jboss-web>  

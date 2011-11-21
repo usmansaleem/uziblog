@@ -7,6 +7,7 @@
     <param-value>com.sun.el.ExpressionFactoryImpl</param-value>
   </context-param>
   -->
+
   <context-param>
     <description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
     <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
@@ -30,6 +31,28 @@
     <url-pattern>*.xhtml</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
-    <welcome-file>/index.xhtml</welcome-file>
+    <welcome-file>/index.jsp</welcome-file>
   </welcome-file-list>
+  
+  <security-constraint>
+   <display-name>Restricted Access for Blog Administration</display-name>
+   <web-resource-collection>
+      <web-resource-name>Restricted Blog Access</web-resource-name>
+      <url-pattern>/edit.xhtml</url-pattern>
+      <url-pattern>/new.xhtml</url-pattern>
+   </web-resource-collection>
+   <auth-constraint>
+      <role-name>blogadmin</role-name>
+   </auth-constraint>
+  </security-constraint>
+  
+  <security-role>
+          <role-name>blogadmin</role-name>
+  </security-role>
+  
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>usmans.info</realm-name>
+  </login-config>
+  
 </web-app>
