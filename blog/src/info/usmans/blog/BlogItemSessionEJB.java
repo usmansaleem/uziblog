@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -29,8 +30,11 @@ public class BlogItemSessionEJB {
 	/**
 	 * The saved DataSource for the database
 	 */
+	/*
 	@Inject
 	@Named("jdbc/uziblog")
+	*/
+	@Resource(mappedName="java:/uziblogds")
 	private DataSource _ds;
 
 	/**
@@ -334,8 +338,6 @@ public class BlogItemSessionEJB {
 	public void updateBlog(BlogEntry selectedBlogEntry) throws SQLException {
 		Connection con = _ds.getConnection();
 		try {
-			boolean oldAutoCommitMode = con.getAutoCommit();
-			con.setAutoCommit(false);
 
 			PreparedStatement ps = con
 					.prepareStatement("UPDATE blog_item SET ititle=?, ibody=? WHERE inumber=?");
@@ -365,10 +367,7 @@ public class BlogItemSessionEJB {
 				psInsert.executeBatch();
 				psInsert.close();
 			}
-			con.commit();
-			con.setAutoCommit(oldAutoCommitMode);
 		} catch (SQLException sqe) {
-			con.rollback();
 			throw sqe;
 		} finally {
 			con.close();
