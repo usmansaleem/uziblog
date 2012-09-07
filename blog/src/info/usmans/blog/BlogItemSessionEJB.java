@@ -380,12 +380,12 @@ public class BlogItemSessionEJB {
 		try {
 			PreparedStatement ps = con
 					.prepareStatement(
-							"INSERT INTO blog_item (ititle, ibody, itime, inumber) VALUES (?,?,?,?)",
+							"INSERT INTO blog_item (ititle, ibody, itime) VALUES (?,?,?)",
 							Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, newBlog.getTitle());
 			ps.setString(2, newBlog.getBody());
 			ps.setTimestamp(3, new Timestamp(new Date().getTime()));
-			ps.setObject(4, null);
+			//ps.setObject(4, null);
 			ps.executeUpdate();
 			ResultSet generatedKeysRS = ps.getGeneratedKeys();
 			if (generatedKeysRS.next()) {
