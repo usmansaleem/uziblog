@@ -151,6 +151,7 @@ public class BlogEntryGlobal implements Serializable {
 				item.setLink("http://usmans.info/detail.xhtml?blogID="
 						+ blog.getId());
 				item.setGuid(item.new Guid("blogId=" + blog.getId()));
+				item.setPubDate(blog.getCreatedon());
 				for (Long catID : blog.getCategories()) {
 					item.addCategory(item.new Category(categoryNameByIdMap
 							.get(catID)));
