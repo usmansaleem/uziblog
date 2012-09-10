@@ -95,7 +95,7 @@ public class BlogEntryGlobal implements Serializable {
 		Channel channel = new Channel("Usman Saleem - Blog",
 				"http://usmans.info/",
 				"Usman Saleem Blog for Java, Linux and other stuff.");
-		channel.setCopyright("(c) 2005-2011 Usman Saleem.");
+		channel.setCopyright("(c) 2005-2012 Usman Saleem.");
 		channel.setManagingEditor("usman@usmans.info");
 		channel.setWebMaster("usman@usmans.info");
 		// iterate through global categories

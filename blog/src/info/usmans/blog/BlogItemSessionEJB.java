@@ -15,8 +15,6 @@ import java.util.TreeMap;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.sql.DataSource;
 
 /**
