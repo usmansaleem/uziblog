@@ -2,9 +2,9 @@ Uzi Blog.
 
 My custom written blog using JEE web profile.
 
-/blog (Eclipse project to create blog.war). Modify WEB-INF/resin-web.xml or appropriate tomcat specific file for user creds).
+This is a maven based project and can be deployed automatically on openshift.
 
-/schema (database schema).
+/schema contains database schema that is required to be executed on PostgreSQL.
 
 http://usmans.info
 usman@usmans.info

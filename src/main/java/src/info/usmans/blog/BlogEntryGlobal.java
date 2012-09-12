@@ -18,11 +18,6 @@ import javax.inject.Named;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
-import viecili.jrss.generator.RSSFeedGenerator;
-import viecili.jrss.generator.RSSFeedGeneratorFactory;
-import viecili.jrss.generator.elem.Channel;
-import viecili.jrss.generator.elem.Item;
-import viecili.jrss.generator.elem.RSS;
 
 /**
  * The purpose of this class is to avoid extra calls to database for count
@@ -89,82 +84,60 @@ public class BlogEntryGlobal implements Serializable {
 
 	}
 
-	private void updateRSSFeed() throws SQLException, IOException {
-		// update global RSS feed and channel specific RSS feed
-		RSSFeedGenerator rssGenerator = RSSFeedGeneratorFactory.getDefault();
-		Channel channel = new Channel("Usman Saleem - Blog",
-				"http://usmans.info/",
-				"Usman Saleem Blog for Java, Linux and other stuff.");
-		channel.setCopyright("(c) 2005-2012 Usman Saleem.");
-		channel.setManagingEditor("usman@usmans.info");
-		channel.setWebMaster("usman@usmans.info");
-		// iterate through global categories
-		for (Category cat : getCategories()) {
-			channel.addCategory(channel.new Category(cat.getName()));
+
+        private void updateRSSFeed(Category cat) throws SQLException, IOException{
+                String title = "Usman Saleem - Blog";
+                List<BlogEntry> blogEntryList = null;
+
+		if(cat != null) {
+			title = title + " - " + cat.getName();
+                        blogEntryList = _blogfacade.getTopTenBlogEntriesByCategory(cat.getId());
+                } else {
+                        blogEntryList = _blogfacade.getTopTenBlogEntries(); 
 		}
+		// update global RSS feed and channel specific RSS feed
+                
+		// iterate through global categories and create a List<String>
+		List<String> categoriesList = new ArrayList<String>();
+		for (Category _cat : getCategories()) {
+			categoriesList.add(_cat.getName());
+		}
+
+		RssChannel rssChannel = new RssChannel(title, "http://www.usmans.info","Usman Saleem Blog for Java, Linux and other stuff.", categoriesList);
 
 		// iterate through blog entries
-		for (BlogEntry blog : _blogfacade.getTopTenBlogEntries()) {
-			Item item = new Item(blog.getTitle(), blog.getBody());
-			item.setAuthor("Uzi");
-			item.setLink("http://usmans.info/detail.xhtml?blogID="
-					+ blog.getId());
-			item.setGuid(item.new Guid("blogId=" + blog.getId()));
-			item.setPubDate(blog.getCreatedon());
+		for (BlogEntry blog : blogEntryList ) {
+			List<String> itemCategoryList = new ArrayList<String>();
 			for (Long catID : blog.getCategories()) {
-				item.addCategory(item.new Category(categoryNameByIdMap
-						.get(catID)));
+				itemCategoryList.add(categoryNameByIdMap.get(catID));
 			}
+                        rssChannel.addItem(blog.getTitle(), 
+                                    "http://usmans.info/detail.xhtml?blogID=" + blog.getId(),
+                                    blog.getBody(),"Uzi", itemCategoryList,
+                                    null, "blogId=" + blog.getId(),
+                                    blog.getCreatedon());
+      
 
-			channel.addItem(item);
 		}
 
-		RSS rss = new RSS();
-		rss.addChannel(channel);
+                if(cat != null) {
+		  this.rssFeedByCat.put(cat.getId(),
+					rssChannel.toString());
+                } else {
+		  this.globalRSSFeed = rssChannel.toString();
+		}
 
-		this.globalRSSFeed = rssGenerator.generateAsString(rss);
+        }
+
+	private void updateRSSFeed() throws SQLException, IOException {
+                updateRSSFeed(null);
 		updateRSSFeedByCat();
 	}
 
 	private void updateRSSFeedByCat() throws SQLException, IOException {
 		// iterate through global categories
 		for (Category cat : getCategories()) {
-
-			// update global RSS feed and channel specific RSS feed
-			RSSFeedGenerator rssGenerator = RSSFeedGeneratorFactory
-					.getDefault();
-			Channel channel = new Channel("Usman Saleem - Blog ["
-					+ cat.getName() + "]", "http://usmans.info/",
-					"Usman Saleem Blog for Java, Linux and other stuff.");
-			channel.setCopyright("(c) 2005-2011 Usman Saleem.");
-			channel.setManagingEditor("usman@usmans.info");
-			channel.setWebMaster("usman@usmans.info");
-			for (Category _cat : getCategories()) {
-				channel.addCategory(channel.new Category(_cat.getName()));
-			}
-
-			// iterate through blog entries
-			for (BlogEntry blog : _blogfacade.getTop10BlogEntriesByCategory(cat
-					.getId())) {
-				Item item = new Item(blog.getTitle(), blog.getBody());
-				item.setAuthor("Uzi");
-				item.setLink("http://usmans.info/detail.xhtml?blogID="
-						+ blog.getId());
-				item.setGuid(item.new Guid("blogId=" + blog.getId()));
-				item.setPubDate(blog.getCreatedon());
-				for (Long catID : blog.getCategories()) {
-					item.addCategory(item.new Category(categoryNameByIdMap
-							.get(catID)));
-				}
-
-				channel.addItem(item);
-			}
-
-			RSS rss = new RSS();
-			rss.addChannel(channel);
-			this.rssFeedByCat.put(cat.getId(),
-					rssGenerator.generateAsString(rss));
-
+                  updateRSSFeed(cat);
 		}
 
 	}

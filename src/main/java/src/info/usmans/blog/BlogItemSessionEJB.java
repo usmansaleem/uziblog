@@ -239,7 +239,7 @@ public class BlogItemSessionEJB {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<BlogEntry> getTop10BlogEntriesByCategory(long catID)
+	public List<BlogEntry> getTopTenBlogEntriesByCategory(long catID)
 			throws SQLException {
 		Connection con = null;
 		ArrayList<BlogEntry> blogEntry = new ArrayList<BlogEntry>();
