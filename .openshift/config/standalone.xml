@@ -96,19 +96,9 @@
                         <password>sa</password>
                     </security>
                 </datasource>
-                <datasource jndi-name="java:jboss/datasources/MysqlDS" enabled="${mysql.enabled}" use-java-context="true" pool-name="MysqlDS">
-                    <connection-url>jdbc:mysql://${env.OPENSHIFT_DB_HOST}:${env.OPENSHIFT_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
-                    <driver>mysql</driver>
-                    <security>
-                      <user-name>${env.OPENSHIFT_DB_USERNAME}</user-name>
-                      <password>${env.OPENSHIFT_DB_PASSWORD}</password>
-                    </security>
-                    <validation>
-                      <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
-                	</validation>
-                </datasource>
-                <datasource jndi-name="java:jboss/datasources/PostgreSQLDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="PostgreSQLDS" use-ccm="true">
+                <datasource jndi-name="java:/uziblogds" enabled="${postgresql.enabled}" jta="false" use-java-context="true" pool-name="PostgreSQLDS" use-ccm="true">
                     <connection-url>jdbc:postgresql://${env.OPENSHIFT_DB_HOST}:${env.OPENSHIFT_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
+                    <driver-class>org.postgresql.Driver</driver-class>
                     <driver>postgresql</driver>
                     <security>
                       <user-name>${env.OPENSHIFT_DB_USERNAME}</user-name>
@@ -118,12 +108,20 @@
                       <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
                 	</validation>
                 </datasource>
+                <!--datasource jndi-name="java:jboss/datasources/PostgreSQLDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="PostgreSQLDS" use-ccm="true">
+                    <connection-url>jdbc:postgresql://${env.OPENSHIFT_DB_HOST}:${env.OPENSHIFT_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
+                    <driver>postgresql</driver>
+                    <security>
+                      <user-name>${env.OPENSHIFT_DB_USERNAME}</user-name>
+                      <password>${env.OPENSHIFT_DB_PASSWORD}</password>
+                    </security>
+                    <validation>
+                      <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+                	</validation>
+                </datasource-->
                 <drivers>
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
-                    </driver>
-                    <driver name="mysql" module="com.mysql.jdbc">
-                        <xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>
                     </driver>
                     <driver name="postgresql" module="org.postgresql.jdbc">
                         <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
@@ -460,6 +458,14 @@
                         <login-module code="UsersRoles" flag="required">
                             <module-option name="usersProperties" value="${jboss.server.config.dir}/application-users.properties"/>
                             <module-option name="rolesProperties" value="${jboss.server.config.dir}/application-roles.properties"/>
+                        </login-module>
+                    </authentication>
+                </security-domain>
+		 <security-domain name="uziblog" cache-type="default">
+                    <authentication>
+                        <login-module code="UsersRoles" flag="required">
+                            <module-option name="usersProperties" value="${env.OPENSHIFT_DATA_DIR}/uziblog-users.properties"/>
+                            <module-option name="rolesProperties" value="${env.OPENSHIFT_DATA_DIR}/uziblog-roles.properties"/>
                         </login-module>
                     </authentication>
                 </security-domain>
