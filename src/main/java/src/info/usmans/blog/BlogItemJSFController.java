@@ -86,7 +86,7 @@ public class BlogItemJSFController implements Serializable {
 					setRowCount(_blogEntryGlobal.getBlogEntryCount());
 					return _blogfacade.getBlogEntries(first, pageSize);
 				} catch (SQLException e) {
-					// TODO: Show error
+					e.printStackTrace();
 					return null;
 				}
 			}
@@ -118,6 +118,7 @@ public class BlogItemJSFController implements Serializable {
 		try {
 			return _blogfacade.getBlogEntriesByCategory(this.catID);
 		} catch (SQLException e) {
+                        e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -183,6 +184,7 @@ public class BlogItemJSFController implements Serializable {
 		try {
 			this.selectedBlogEntry = _blogfacade.getBlogEntryById(this.blogID);
 		} catch (SQLException e) {
+                        e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -219,10 +221,11 @@ public class BlogItemJSFController implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
 							"Blog Updated", "Blog Updated"));
 		} catch (SQLException e) {
+                        e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Database Error", e.getMessage()));
+							"Database Error while saving blog", e.getMessage()));
 		}
 	}
 
@@ -247,10 +250,11 @@ public class BlogItemJSFController implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
 							"New Blog Entry", "Created!"));
 		} catch (SQLException e) {
+                        e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Database Error", e.getMessage()));
+							"Database Error while creating blog", e.getMessage()));
 		}
 	}
 }

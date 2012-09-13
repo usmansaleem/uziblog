@@ -366,6 +366,7 @@ public class BlogItemSessionEJB {
 				psInsert.close();
 			}
 		} catch (SQLException sqe) {
+                        sqe.printStackTrace();
 			throw sqe;
 		} finally {
 			con.close();
@@ -411,6 +412,7 @@ public class BlogItemSessionEJB {
 				psInsert.close();
 			}
 		} catch (SQLException sqe) {
+                        sqe.printStackTrace();
 			throw sqe;
 		} finally {
 			con.close();
