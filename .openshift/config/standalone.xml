@@ -96,9 +96,9 @@
                         <password>sa</password>
                     </security>
                 </datasource>
-                <datasource jndi-name="java:/uziblogds" enabled="${postgresql.enabled}" jta="false" use-java-context="true" pool-name="PostgreSQLDS" use-ccm="true">
+                <datasource jndi-name="java:/uziblogds" enabled="${postgresql.enabled}" jta="true" use-java-context="true" pool-name="PostgreSQLDS" use-ccm="true">
                     <connection-url>jdbc:postgresql://${env.OPENSHIFT_DB_HOST}:${env.OPENSHIFT_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
-                    <driver-class>org.postgresql.Driver</driver-class>
+                    <!--driver-class>org.postgresql.Driver</driver-class-->
                     <driver>postgresql</driver>
                     <security>
                       <user-name>${env.OPENSHIFT_DB_USERNAME}</user-name>
