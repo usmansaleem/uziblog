@@ -11,7 +11,7 @@
 		converterMessage="Category id must be an integer"/>
 	</f:metadata>
 	
-	<ui:define name="title">Blog Entries by Category</ui:define>
+	<ui:define name="title">Blog Entries by Category <h:outputText value="#{blogcontroller.catName}" /></ui:define>
 	<ui:define name="head">
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="#{request.contextPath}/rss?catID=#{blogcontroller.catID}" />
 	</ui:define>
