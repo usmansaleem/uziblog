@@ -47,16 +47,26 @@ public class BlogEntryGlobal implements Serializable {
 
 	private String globalRSSFeed;
 	private Map<Long, String> rssFeedByCat = new TreeMap<Long, String>();
+	private String databaseInfo = "Unknown";
 
 	public BlogEntryGlobal() {
 	}
 
 	@PostConstruct
 	public void init() {
+                updateDatabaseInfo();
 		updateCategories();
 		updateBlogEntryCount();
 
 	}
+
+	/**
+ 	* Update database product information at this singelton initialization
+ 	*/  
+        private void updateDatabaseInfo() {
+		databaseInfo = _blogfacade.getDatabaseInfo();
+
+        }
 
 	/**
 	 * Used by jsf controller beans to get total number of blog entries rather
@@ -198,5 +208,9 @@ public class BlogEntryGlobal implements Serializable {
 	public String getJsfVersion() {
 		return FacesContext.class.getPackage().getImplementationVersion();
 	}
+
+        public String getDatabaseInfo() {
+              return databaseInfo;
+        }  
 
 }

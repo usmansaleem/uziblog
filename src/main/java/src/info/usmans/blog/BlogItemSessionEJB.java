@@ -41,6 +41,34 @@ public class BlogItemSessionEJB {
 	public BlogItemSessionEJB() {
 	}
 
+        
+        /**
+ 	* Returns database product name and version. 
+ 	* This should only be called at application initialization time by the controller.
+ 	*/ 
+        public String getDatabaseInfo() {
+		Connection con = null;
+		String databaseInfo = "Unknown";
+		try {
+			con = _ds.getConnection();
+                        java.sql.DatabaseMetaData metadata = con.getMetaData();
+                        databaseInfo = metadata.getDatabaseProductName() + " " + metadata.getDatabaseProductVersion();
+		} catch(SQLException sqe) {
+			sqe.printStackTrace();
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				}catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+                return databaseInfo;
+
+
+        }
+
 	public int getCount() throws SQLException {
 		Connection con = null;
 		int count = 0;
