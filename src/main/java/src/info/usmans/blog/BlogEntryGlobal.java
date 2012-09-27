@@ -95,6 +95,10 @@ public class BlogEntryGlobal implements Serializable {
 	}
 
 
+        /**
+ 	* Update RSS Feed local cache. 
+ 	* @param Category. Category specific RSS to update. null will update main RSS feed
+        */ 
         private void updateRSSFeed(Category cat) throws SQLException, IOException{
                 String title = "Usman Saleem - Blog";
                 List<BlogEntry> blogEntryList = null;
@@ -141,15 +145,10 @@ public class BlogEntryGlobal implements Serializable {
 
 	private void updateRSSFeed() throws SQLException, IOException {
                 updateRSSFeed(null);
-		updateRSSFeedByCat();
-	}
-
-	private void updateRSSFeedByCat() throws SQLException, IOException {
 		// iterate through global categories
 		for (Category cat : getCategories()) {
                   updateRSSFeed(cat);
 		}
-
 	}
 
 	public Map<String, Long> getCategoriesMap() {
