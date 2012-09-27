@@ -31,6 +31,20 @@
 				</ui:repeat>
 			</f:facet>
 		</p:panel>		
+
+		<h:form>
+			<p:commandButton id="commentButton" value="Comment">
+				<f:setPropertyActionListener value="#{true}" target="#{requestScope.renderCommentBox}" />
+			</p:commandButton>
+	
+			<p:outputPanel id="panel" autoUpdate="true">
+				<p:inputTextarea rows="5" cols="30" counter="counter" maxlength="50"       
+    					counterTemplate="{0} characters remaining." autoResize="false" rendered="#{requestScope.renderCommentBox}"/>
+			</p:outputPanel>
+			<p:captcha label="Captcha"/>  
+  
+    			<p:commandButton value="Submit" ajax="false" actionListener="#{blogcontroller.addComment}" /> 
+		</h:form>
 				
 	</div>
 	</ui:define>

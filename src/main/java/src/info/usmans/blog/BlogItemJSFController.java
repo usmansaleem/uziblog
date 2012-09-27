@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -257,4 +258,15 @@ public class BlogItemJSFController implements Serializable {
 							"Database Error while creating blog", e.getMessage()));
 		}
 	}
+
+
+       /**
+ 	* Add a comment
+ 	*/ 	  
+       public void addComment(ActionEvent e) {
+		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Correct", "You proved to be a human, but its still work in progress.");  
+                //TODO Add actual comment
+		FacesContext.getCurrentInstance().addMessage(null, msg);  
+
+       }
 }
