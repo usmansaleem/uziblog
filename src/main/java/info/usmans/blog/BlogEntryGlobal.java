@@ -18,12 +18,14 @@ import javax.inject.Named;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
-
 /**
  * The purpose of this class is to avoid extra calls to database for count
  * queries and categories list. The classes which require count will call
  * methods from this class. The classes which insert/update/delete blog entry,
  * will update the count in this class.
+ * 
+ * This class is declared as a singelton, and it will provide some statistical
+ * information to be brag about on site.
  * 
  * @author uzi
  * 
@@ -47,26 +49,54 @@ public class BlogEntryGlobal implements Serializable {
 
 	private String globalRSSFeed;
 	private Map<Long, String> rssFeedByCat = new TreeMap<Long, String>();
+	
 	private String databaseInfo = "Unknown";
+	private String serverInfo;
+	private String jsfTitle;
+	private String jsfVersion;
 
 	public BlogEntryGlobal() {
 	}
 
 	@PostConstruct
 	public void init() {
-                updateDatabaseInfo();
-		updateCategories();
-		updateBlogEntryCount();
+		updateDatabaseInfo();
+		updateServerInfo();
+		updateJSFTitle();
+		updateJSFVersion();
+		
+		updateCategories(); //TODO: Move
+		updateBlogEntryCount(); //TODO: Move
 
 	}
 
 	/**
- 	* Update database product information at this singelton initialization
- 	*/  
-        private void updateDatabaseInfo() {
+	 * Update database product information at this singelton initialization
+	 */
+	private void updateDatabaseInfo() {
 		databaseInfo = _blogfacade.getDatabaseInfo();
 
-        }
+	}
+
+	/**
+	 * Update Server Information
+	 */
+	private void updateServerInfo() {
+		this.serverInfo = ((ServletContext) FacesContext.getCurrentInstance()
+				.getExternalContext().getContext()).getServerInfo();
+	}
+
+	/**
+	 * Update JSF implementation title.
+	 */
+	private void updateJSFTitle() {
+		this.jsfTitle = FacesContext.class.getPackage()
+				.getImplementationTitle();
+	}
+
+	private void updateJSFVersion() {
+		this.jsfVersion = FacesContext.class.getPackage().getImplementationVersion();
+	}
 
 	/**
 	 * Used by jsf controller beans to get total number of blog entries rather
@@ -94,60 +124,62 @@ public class BlogEntryGlobal implements Serializable {
 
 	}
 
+	/**
+	 * Update RSS Feed local cache.
+	 * 
+	 * @param Category
+	 *            . Category specific RSS to update. null will update main RSS
+	 *            feed
+	 */
+	private void updateRSSFeed(Category cat) throws SQLException, IOException {
+		String title = "Usman Saleem - Blog";
+		List<BlogEntry> blogEntryList = null;
 
-        /**
- 	* Update RSS Feed local cache. 
- 	* @param Category. Category specific RSS to update. null will update main RSS feed
-        */ 
-        private void updateRSSFeed(Category cat) throws SQLException, IOException{
-                String title = "Usman Saleem - Blog";
-                List<BlogEntry> blogEntryList = null;
-
-		if(cat != null) {
+		if (cat != null) {
 			title = title + " - " + cat.getName();
-                        blogEntryList = _blogfacade.getTopTenBlogEntriesByCategory(cat.getId());
-                } else {
-                        blogEntryList = _blogfacade.getTopTenBlogEntries(); 
+			blogEntryList = _blogfacade.getTopTenBlogEntriesByCategory(cat
+					.getId());
+		} else {
+			blogEntryList = _blogfacade.getTopTenBlogEntries();
 		}
 		// update global RSS feed and channel specific RSS feed
-                
+
 		// iterate through global categories and create a List<String>
 		List<String> categoriesList = new ArrayList<String>();
 		for (Category _cat : getCategories()) {
 			categoriesList.add(_cat.getName());
 		}
 
-		RssChannel rssChannel = new RssChannel(title, "http://www.usmans.info","Usman Saleem Blog for Java, Linux and other stuff.", categoriesList);
+		RssChannel rssChannel = new RssChannel(title, "http://www.usmans.info",
+				"Usman Saleem Blog for Java, Linux and other stuff.",
+				categoriesList);
 
 		// iterate through blog entries
-		for (BlogEntry blog : blogEntryList ) {
+		for (BlogEntry blog : blogEntryList) {
 			List<String> itemCategoryList = new ArrayList<String>();
 			for (Long catID : blog.getCategories()) {
 				itemCategoryList.add(categoryNameByIdMap.get(catID));
 			}
-                        rssChannel.addItem(blog.getTitle(), 
-                                    "http://usmans.info/detail.xhtml?blogID=" + blog.getId(),
-                                    blog.getBody(),"Uzi", itemCategoryList,
-                                    null, "blogId=" + blog.getId(),
-                                    blog.getCreatedon());
-      
+			rssChannel.addItem(blog.getTitle(),
+					"http://usmans.info/detail.xhtml?blogID=" + blog.getId(),
+					blog.getBody(), "Uzi", itemCategoryList, null, "blogId="
+							+ blog.getId(), blog.getCreatedon());
 
 		}
 
-                if(cat != null) {
-		  this.rssFeedByCat.put(cat.getId(),
-					rssChannel.toString());
-                } else {
-		  this.globalRSSFeed = rssChannel.toString();
+		if (cat != null) {
+			this.rssFeedByCat.put(cat.getId(), rssChannel.toString());
+		} else {
+			this.globalRSSFeed = rssChannel.toString();
 		}
 
-        }
+	}
 
 	private void updateRSSFeed() throws SQLException, IOException {
-                updateRSSFeed(null);
+		updateRSSFeed(null);
 		// iterate through global categories
 		for (Category cat : getCategories()) {
-                  updateRSSFeed(cat);
+			updateRSSFeed(cat);
 		}
 	}
 
@@ -187,29 +219,55 @@ public class BlogEntryGlobal implements Serializable {
 		}
 	}
 
+	/**
+	 * Used by RssServlet, TODO: deprecate its usage
+	 * @return
+	 */
 	public String getGlobalRSSFeed() {
 		return globalRSSFeed;
 	}
 
+	/**
+	 * Used by RssServlet, TODO deprecate its usage!
+	 * @param id
+	 * @return
+	 */
 	public String getRSSFeedByCat(Long id) {
 		return this.rssFeedByCat.get(id);
 	}
 
+	/**
+	 * Returns Server Information
+	 * 
+	 * @return
+	 */
 	public String getServerInfo() {
-		return ((ServletContext) FacesContext.getCurrentInstance()
-				.getExternalContext().getContext()).getServerInfo();
+		return this.serverInfo;
 	}
 
+	/**
+	 * Returns JSF Implementation
+	 * 
+	 * @return
+	 */
 	public String getJsfTitle() {
-		return FacesContext.class.getPackage().getImplementationTitle();
+		return this.jsfTitle;
 	}
 
+	/**
+	 * Returns JSF Implementation version
+	 * @return
+	 */
 	public String getJsfVersion() {
-		return FacesContext.class.getPackage().getImplementationVersion();
+		return this.jsfVersion;
 	}
 
-        public String getDatabaseInfo() {
-              return databaseInfo;
-        }  
+	/**
+	 * Returns JDBC Database Vendor
+	 * @return
+	 */
+	public String getDatabaseInfo() {
+		return databaseInfo;
+	}
 
 }

@@ -77,6 +77,8 @@ public class BlogItemJSFController implements Serializable {
 	@PostConstruct
 	@SuppressWarnings("serial")
 	public void init() {
+		//TODO: Check blog entry count in cache, if it doesn't exist add it.
+		
 		lazyModel = new LazyDataModel<BlogEntry>() {
 
 			@Override
@@ -84,6 +86,7 @@ public class BlogItemJSFController implements Serializable {
 					String sortField, SortOrder sortOrder,
 					Map<String, String> filters) {
 				try {
+					// TODO: Obtain blog entry count from infinispan cache
 					setRowCount(_blogEntryGlobal.getBlogEntryCount());
 					return _blogfacade.getBlogEntries(first, pageSize);
 				} catch (SQLException e) {
@@ -93,7 +96,7 @@ public class BlogItemJSFController implements Serializable {
 			}
 
 		};
-
+		// TODO: Obtain blog entry count from infinispan cache
 		lazyModel.setRowCount(_blogEntryGlobal.getBlogEntryCount());
 
 	}
@@ -119,7 +122,7 @@ public class BlogItemJSFController implements Serializable {
 		try {
 			return _blogfacade.getBlogEntriesByCategory(this.catID);
 		} catch (SQLException e) {
-                        e.printStackTrace();
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -137,6 +140,7 @@ public class BlogItemJSFController implements Serializable {
 	public void setCatID(long id) {
 		// valid category
 		boolean validCategory = false;
+		// TODO: Obtain it from infinispan cache
 		Map<Long, String> catMap = _blogEntryGlobal.getCategoryByIdMap();
 		if (catMap.containsKey(new Long(id))) {
 			validCategory = true;
@@ -185,7 +189,7 @@ public class BlogItemJSFController implements Serializable {
 		try {
 			this.selectedBlogEntry = _blogfacade.getBlogEntryById(this.blogID);
 		} catch (SQLException e) {
-                        e.printStackTrace();
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -222,11 +226,13 @@ public class BlogItemJSFController implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
 							"Blog Updated", "Blog Updated"));
 		} catch (SQLException e) {
-                        e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Database Error while saving blog", e.getMessage()));
+			e.printStackTrace();
+			FacesContext.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+									"Database Error while saving blog", e
+											.getMessage()));
 		}
 	}
 
@@ -251,22 +257,24 @@ public class BlogItemJSFController implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
 							"New Blog Entry", "Created!"));
 		} catch (SQLException e) {
-                        e.printStackTrace();
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Database Error while creating blog", e.getMessage()));
+							"Database Error while creating blog", e
+									.getMessage()));
 		}
 	}
 
+	/**
+	 * Add a comment event handler
+	 */
+	public void addComment(ActionEvent e) {
+		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Correct",
+				"You proved to be a human, but its still work in progress.");
+		// TODO Add actual comment
+		FacesContext.getCurrentInstance().addMessage(null, msg);
 
-       /**
- 	* Add a comment
- 	*/ 	  
-       public void addComment(ActionEvent e) {
-		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Correct", "You proved to be a human, but its still work in progress.");  
-                //TODO Add actual comment
-		FacesContext.getCurrentInstance().addMessage(null, msg);  
-
-       }
+	}
 }
