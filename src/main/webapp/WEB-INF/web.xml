@@ -68,5 +68,10 @@
     <auth-method>BASIC</auth-method>
     <realm-name>usmans.info</realm-name>
   </login-config>
+
+  <mime-mapping>
+        <extension>ttf</extension>
+        <mime-type>application/octet-stream</mime-type>
+  </mime-mapping>
   
 </web-app>
