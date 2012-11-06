@@ -73,11 +73,12 @@ h1 {
 @font-face
 {
   font-family: u; 
-  src: url("#{resource['fonts:nafees_riqa.ttf']}");
+  src: url("#{resource['fonts:nafees_riqa.ttf']}") format('truetype'),
+       url("#{resource['fonts:nafees_riqa.eot']}") format('eot');
 }
 
 #nrfont {
   font-family: u;
-  font-size: large;
+  font-size: x-large;
 }
 	
