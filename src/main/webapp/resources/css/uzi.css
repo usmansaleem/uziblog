@@ -78,7 +78,7 @@ h1 {
 @font-face
 {
   font-family: nr; 
-  src: url("#{resource['fonts:nafees_riqa.ttf']}") format('opentype');
+  src: url("#{resource['fonts:nafees_riqa.ttf']}") format('truetype');
 }
 
 @font-face
@@ -89,7 +89,7 @@ h1 {
 @font-face
 {
   font-family: hn; 
-  src: url("#{resource['fonts:hussaini-nastaleeq.ttf']}") format('opentype');
+  src: url("#{resource['fonts:hussaini-nastaleeq.ttf']}") format('truetype');
 }
 #nrfont {
   font-family: nr;
