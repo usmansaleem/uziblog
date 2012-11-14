@@ -175,7 +175,7 @@ public class BlogEntryGlobal implements Serializable {
 
 	}
 
-	private void updateRSSFeed() throws SQLException, IOException {
+	public void updateRSSFeed() throws SQLException, IOException {
 		updateRSSFeed(null);
 		// iterate through global categories
 		for (Category cat : getCategories()) {

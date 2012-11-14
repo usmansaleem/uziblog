@@ -31,9 +31,15 @@ public class BlogItemJSFController implements Serializable {
 	 */
 	private static final long serialVersionUID = -1393772424698635004L;
 
-	@Inject
+	/**
+         * The main EJB containing our logic
+         */    
+        @Inject
 	private BlogItemSessionEJB _blogfacade;
 
+        /**
+         * A singelton EJB acting as a local cache
+         */ 
 	@Inject
 	private BlogEntryGlobal _blogEntryGlobal;
 
@@ -221,6 +227,8 @@ public class BlogItemJSFController implements Serializable {
 	public void saveBlog() {
 		try {
 			_blogfacade.updateBlog(this.selectedBlogEntry);
+                        //update RSS feed to cater for new changes.
+                        _blogEntryGlobal.updateRSSFeed();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
