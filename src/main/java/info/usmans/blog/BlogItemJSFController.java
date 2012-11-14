@@ -241,7 +241,15 @@ public class BlogItemJSFController implements Serializable {
 							new FacesMessage(FacesMessage.SEVERITY_ERROR,
 									"Database Error while saving blog", e
 											.getMessage()));
-		}
+		} catch(IOException e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+									"IOException while updating blog RSS feed", e
+											.getMessage()));
+                }
 	}
 
 	/**
