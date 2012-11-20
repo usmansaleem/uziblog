@@ -9,6 +9,73 @@ This is a maven based project and can be deployed automatically on openshift.
 http://usmans.info
 usman@usmans.info
 
+-- JBoss AS 7.1/EAP 6 --
+Following configuration steps are required if application needs to be
+deployed on JBoss AS 7.1/EAP 6
+
+1. Create database 'blog'.
+2. Run schema.sql and data.sql from /schema in blog database.
+3. Create postgresql module in JBoss (HINT: update driver name):
+
+<jboss>/modules/postgresql/main/postgresql-**.jar
+<jboss>/modules/postgresql/main/module.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.1" name="org.postgresql">
+     <resources>
+         <resource-root path="postgresql-**.jdbc4.jar"/>
+     </resources>
+     <dependencies>
+         <module name="javax.api"/>
+         <module name="javax.transaction.api"/>
+         <module name="javax.servlet.api" optional="true"/>
+     </dependencies>
+</module>
+
+4. Create datasource and driver in standalone.xml (HINT: update user)
+
+                <datasource jndi-name="java:/uziblogds" pool-name="uziblogds" enabled="true" use-java-context="true" jta="true" use-ccm="true">
+                    <connection-url>jdbc:postgresql://localhost:5432/blog</connection-url>
+                    <!--driver-class>org.postgresql.Driver</driver-class-->
+                    <driver>postgresql</driver>
+                    <security>
+                      <user-name>user</user-name>
+                      <password>password</password>
+                    </security>
+                    <validation>
+                      <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+                        </validation>
+
+                </datasource>
+
+
+                    <driver name="postgresql" module="org.postgresql">
+                        <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+                    </driver>
+
+
+5. Create security context in standalone.xml
+
+                <security-domain name="uziblog" cache-type="default">
+                    <authentication>
+                        <login-module code="UsersRoles" flag="required">
+                            <module-option name="usersProperties" value="${jboss.server.config.dir}/uziblog-users.properties"/>
+                            <module-option name="rolesProperties" value="${jboss.server.config.dir}/uziblog-roles.properties"/>
+                        </login-module>
+                    </authentication>
+                </security-domain>
+
+
+5.1 Create user roles configuration files (HINT: modify 'user'): 
+
+<jboss>/standalone/configuration/uziblog-users.properties:
+user=password
+
+<jboss>/standalone/configuration/uziblog-roles.properties:
+user=blogadmin
+
+6. Rock and roll.
+
 -- OpenShift specific details --
 
 Repo layout
