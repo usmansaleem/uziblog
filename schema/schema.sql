@@ -1,4 +1,6 @@
--- uziblog schema from PostgreSQL schema dump
+--
+-- PostgreSQL database dump
+--
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -44,7 +46,8 @@ CREATE TABLE blog_item (
     ititle character varying(160) DEFAULT NULL::character varying,
     ibody text NOT NULL,
     imore text,
-    itime timestamp without time zone NOT NULL
+    itime timestamp without time zone NOT NULL,
+    blog_section_name character varying(30) DEFAULT 'Default'::character varying NOT NULL
 );
 
 
@@ -85,6 +88,15 @@ CREATE TABLE blog_item_comments (
 
 
 --
+-- Name: blog_section; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE blog_section (
+    name character varying(30) NOT NULL
+);
+
+
+--
 -- Name: blog_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -109,11 +121,27 @@ ALTER TABLE ONLY blog_item
 
 
 --
+-- Name: blog_section_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY blog_section
+    ADD CONSTRAINT blog_section_pkey PRIMARY KEY (name);
+
+
+--
 -- Name: item_category; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY blog_item_categories
     ADD CONSTRAINT item_category PRIMARY KEY (item_id, category_id);
+
+
+--
+-- Name: blog_item_blog_section_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY blog_item
+    ADD CONSTRAINT blog_item_blog_section_name_fkey FOREIGN KEY (blog_section_name) REFERENCES blog_section(name);
 
 
 --
@@ -138,16 +166,6 @@ ALTER TABLE ONLY blog_item_categories
 
 ALTER TABLE ONLY blog_item_comments
     ADD CONSTRAINT blog_item_comments_blog_entry_id_fkey FOREIGN KEY (blog_entry_id) REFERENCES blog_item(inumber);
-
-
---
--- Name: public; Type: ACL; Schema: -; Owner: -
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
