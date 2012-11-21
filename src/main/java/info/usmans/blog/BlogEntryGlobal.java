@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
@@ -42,7 +43,9 @@ public class BlogEntryGlobal implements Serializable {
 	@Inject
 	private BlogItemSessionEJB _blogfacade;
 
-	private int blogEntryCount = 0;
+	/** Key is blog Section, value is count of blog entries */
+	private Map<String, Integer> blogEntryCountMap = new HashMap<String, Integer>();
+        private List<String> blogSectionList = null;
 	private Map<String, Long> categoriesMap = null;
 	private Map<Long, String> categoryNameByIdMap = null;
 	private List<Category> categories = null;
@@ -65,6 +68,7 @@ public class BlogEntryGlobal implements Serializable {
 		updateJSFTitle();
 		updateJSFVersion();
 		
+		updateBlogSections();
 		updateCategories(); //TODO: Move
 		updateBlogEntryCount(); //TODO: Move
 
@@ -104,8 +108,8 @@ public class BlogEntryGlobal implements Serializable {
 	 * 
 	 * @return
 	 */
-	public int getBlogEntryCount() {
-		return blogEntryCount;
+	public int getBlogEntryCount(String blogSection) {
+		return blogEntryCountMap.get(blogSection).intValue();
 	}
 
 	/**
@@ -113,7 +117,9 @@ public class BlogEntryGlobal implements Serializable {
 	 */
 	public void updateBlogEntryCount() {
 		try {
-			blogEntryCount = _blogfacade.getCount();
+			for(String section: getBlogSections()) {
+				blogEntryCountMap.put(section, new Integer(_blogfacade.getCount(section)));
+			}
 			updateRSSFeed();
 
 		} catch (SQLException e) {
@@ -122,6 +128,23 @@ public class BlogEntryGlobal implements Serializable {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+ 	* Update Blog Sections by fetching them from database (Session EJB).
+ 	* This may be call in future from web tier when sections can be
+ 	* modified from there.
+ 	*
+ 	* In case of error, we will initialize with 'Default' category
+ 	*/  
+	public void updateBlogSections() {
+		try {
+			this.blogSectionList = _blogfacade.getBlogSectionsList();
+		} catch(SQLException sqe) {
+			System.err.println("Error in getting blog sections from DB: " + sqe.getMessage());
+			this.blogSectionList = new ArrayList<String>();
+			this.blogSectionList.add(BlogItemJSFController.DEFAULT_BLOG_SECTION);
+		}
 	}
 
 	/**
@@ -193,6 +216,22 @@ public class BlogEntryGlobal implements Serializable {
 
 	public List<Category> getCategories() {
 		return categories;
+	}
+
+        /**
+ 	* Returns blog sections to be displayed by mainTemplate in datatable
+ 	*/ 
+        public List<String> getBlogSections() {
+		return blogSectionList; 
+        }
+
+        /**
+ 	* Determine if the passed section is in our valid list.
+ 	* This method is used by JSF Controller (Backing) Bean
+ 	*/ 
+	public boolean isValidBlogSection(String section) {
+		//if this doesn't work, we may need to iterate the list
+		return getBlogSections().contains(section);
 	}
 
 	/**

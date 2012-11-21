@@ -11,7 +11,7 @@
 		converterMessage="Category id must be an integer"/>
 	</f:metadata>
 	
-	<ui:define name="title">Blog Entries by Category <h:outputText value="#{blogcontroller.catName}" /></ui:define>
+	<ui:define name="title">Section: <h:outputText value="#{blogcontroller.blogSection}" />, Blog Entries by Category <h:outputText value="#{blogcontroller.catName}" /></ui:define>
 	<ui:define name="head">
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="#{request.contextPath}/rss?catID=#{blogcontroller.catID}" />
 	</ui:define>
@@ -25,7 +25,7 @@
 		paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 						<p:column>  
 							<f:facet name="header">
-							<h:outputText value="Uzi's Blog - #{blogcontroller.catName}" />
+							<h:outputText value="Uzi's Blog - #{blogcontroller.blogSection} - #{blogcontroller.catName}" />
 							</f:facet>
 							<!-- header -->
 							

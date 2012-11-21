@@ -69,13 +69,14 @@ public class BlogItemSessionEJB {
 
         }
 
-	public int getCount() throws SQLException {
+	public int getCount(String section) throws SQLException {
 		Connection con = null;
 		int count = 0;
 		try {
 			con = _ds.getConnection();
 			PreparedStatement ps = con
-					.prepareStatement("select count(*) from blog_item");
+					.prepareStatement("select count(*) from blog_item WHERE blog_section_name = ?");
+			ps.setString(1, section);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			count = rs.getInt(1);
@@ -90,18 +91,20 @@ public class BlogItemSessionEJB {
 		return count;
 	}
 
-	public List<BlogEntry> getBlogEntries(int offset, int limit)
+	public List<BlogEntry> getBlogEntries(int offset, int limit, String section)
 			throws SQLException {
 		Connection con = null;
 		ArrayList<BlogEntry> blogEntry = new ArrayList<BlogEntry>();
 		try {
 			con = _ds.getConnection();
-			PreparedStatement ps2 = con
-					.prepareStatement("select c.id from blog_categories c, blog_item_categories ic where c.id=ic.category_id AND ic.item_id=?");
 			PreparedStatement ps = con
-					.prepareStatement("select inumber, ititle, ibody, imore, itime from blog_item order by itime desc LIMIT ? OFFSET ?");
-			ps.setInt(2, offset);
-			ps.setInt(1, limit);
+					.prepareStatement("SELECT inumber, ititle, ibody, imore, itime, blog_section_name FROM blog_item WHERE blog_section_name = ? ORDER BY itime DESC LIMIT ? OFFSET ?");
+			PreparedStatement ps2 = con
+					.prepareStatement("SELECT c.id FROM blog_categories c, blog_item_categories ic WHERE c.id=ic.category_id AND ic.item_id=?");
+
+			ps.setString(1, section);
+			ps.setInt(2, limit);
+			ps.setInt(3, offset);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				BlogEntry e = new BlogEntry();
@@ -110,6 +113,7 @@ public class BlogItemSessionEJB {
 				e.setBody(rs.getString(3));
 				e.setMore(rs.getString(4));
 				e.setCreatedon(new Date(rs.getTimestamp(5).getTime()));
+				e.setBlogSection(rs.getString(6));
 				// load categories for this blog entry
 				ArrayList<Long> catSet = new ArrayList<Long>();
 				ps2.clearParameters();
@@ -215,7 +219,10 @@ public class BlogItemSessionEJB {
 		return map;
 	}
 
-	public List<BlogEntry> getBlogEntriesByCategory(long catID)
+	/**
+ 	* Return blog entries ordered by category and section
+ 	*/  
+	public List<BlogEntry> getBlogEntriesByCategory(long catID, String section)
 			throws SQLException {
 		Connection con = null;
 		ArrayList<BlogEntry> blogEntry = new ArrayList<BlogEntry>();
@@ -225,8 +232,9 @@ public class BlogItemSessionEJB {
 					.prepareStatement("select c.id from blog_categories c, blog_item_categories ic where c.id=ic.category_id AND ic.item_id=?");
 
 			PreparedStatement ps = con
-					.prepareStatement("SELECT inumber, ititle, ibody, imore, itime FROM blog_item INNER JOIN blog_item_categories ON inumber = item_id WHERE category_id = ? order by itime desc ");
+					.prepareStatement("SELECT inumber, ititle, ibody, imore, itime, blog_section_name FROM blog_item INNER JOIN blog_item_categories ON inumber = item_id WHERE category_id = ? AND blog_section_name = ? order by itime desc ");
 			ps.setLong(1, catID);
+			ps.setString(2, section);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				BlogEntry e = new BlogEntry();
@@ -235,6 +243,7 @@ public class BlogItemSessionEJB {
 				e.setBody(rs.getString(3));
 				e.setMore(rs.getString(4));
 				e.setCreatedon(new Date(rs.getTimestamp(5).getTime()));
+				e.setBlogSection(rs.getString(6));
 				// load categories for this blog entry
 				ArrayList<Long> catSet = new ArrayList<Long>();
 				ps2.clearParameters();
@@ -407,11 +416,12 @@ public class BlogItemSessionEJB {
 		try {
 			PreparedStatement ps = con
 					.prepareStatement(
-							"INSERT INTO blog_item (ititle, ibody, itime) VALUES (?,?,?)",
+							"INSERT INTO blog_item (ititle, ibody, itime, blog_section_name) VALUES (?,?,?,?)",
 							Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, newBlog.getTitle());
 			ps.setString(2, newBlog.getBody());
 			ps.setTimestamp(3, new Timestamp(new Date().getTime()));
+			ps.setString(4, newBlog.getBlogSection());
 			//ps.setObject(4, null);
 			ps.executeUpdate();
 			ResultSet generatedKeysRS = ps.getGeneratedKeys();
@@ -445,6 +455,34 @@ public class BlogItemSessionEJB {
 		} finally {
 			con.close();
 		}
+	}
+
+	/**
+	 * Return Blog Sections list. 
+	 * 
+	 * @return
+	 */
+	public List<String> getBlogSectionsList() throws SQLException {
+		Connection con = null;
+		List<String> list = new ArrayList<String>();
+		try {
+			con = _ds.getConnection();
+			PreparedStatement ps = con
+					.prepareStatement("SELECT name FROM blog_section");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				list.add(rs.getString(1));
+			}
+
+			rs.close();
+			ps.close();
+		} finally {
+			if (con != null) {
+				con.close();
+			}
+		}
+
+		return list;
 	}
 
 }

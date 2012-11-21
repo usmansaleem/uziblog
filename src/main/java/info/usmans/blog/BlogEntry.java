@@ -17,6 +17,7 @@ public class BlogEntry implements Serializable {
 	private String more;
 	private Date createdon;
 	private Long[] categories;
+        private String blogSection = "default";
 
 	public long getId() {
 		return id;
@@ -66,5 +67,12 @@ public class BlogEntry implements Serializable {
 		this.categories = categories;
 	}
 	
+	public String getBlogSection() {
+		return this.blogSection;
+	}
+
+	public void setBlogSection(String blogSection) {
+		this.blogSection = blogSection;
+	}
 	
 }

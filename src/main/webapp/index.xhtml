@@ -7,7 +7,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/templates/maintemplate.xhtml">
 
-	<ui:define name="title">Blog</ui:define>
+	<f:metadata>
+		<f:viewParam required="false" name="blogSection" value="#{blogcontroller.blogSection}" />
+	</f:metadata>
+
+	<ui:define name="title">Blog - <h:outputText value="#{blogcontroller.blogSection}"/></ui:define>
 	
 	<ui:define name="head">
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="#{request.contextPath}/rss" />
@@ -16,14 +20,14 @@
 	<ui:define name="content">
 	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
 		<h:form>
-		<p:messages />
+		<p:messages showDetail="true" autoUpdate="true" closable="true" />
 		
-				<p:dataTable var="bl" value="#{blogcontroller.lazyModel}" paginator="true" rows="10" lazy="true"
+		<p:dataTable var="bl" value="#{blogcontroller.lazyModel}" paginator="true" rows="10" lazy="true"
 		paginatorPosition="bottom" dynamic="false"
 		paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 						<p:column>  
 							<f:facet name="header">
-							<h:outputText value="Uzi's Blog" />
+							<h:outputText value="Uzi's Blog - #{blogcontroller.blogSection}" />
 							</f:facet>
 							<!-- header -->
 							

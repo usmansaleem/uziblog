@@ -32,6 +32,8 @@ public class BlogItemJSFController implements Serializable {
 	 */
 	private static final long serialVersionUID = -1393772424698635004L;
 
+        protected static final String DEFAULT_BLOG_SECTION = "Default";
+
 	/**
          * The main EJB containing our logic
          */    
@@ -45,6 +47,11 @@ public class BlogItemJSFController implements Serializable {
 	private BlogEntryGlobal _blogEntryGlobal;
 
 	private LazyDataModel<BlogEntry> lazyModel;
+
+       /**
+ 	* The default blog section.
+ 	*/ 
+        private String blogSection = DEFAULT_BLOG_SECTION;
 
 	/**
 	 * The current select category
@@ -79,13 +86,12 @@ public class BlogItemJSFController implements Serializable {
 	}
 
 	/**
-	 * Initialize the lazy loading list.
+	 * Initialize the lazy loading list to 'default'.
+	 * TODO: In addition, we need to initialize it again when blog section change.
 	 */
 	@PostConstruct
 	@SuppressWarnings("serial")
 	public void init() {
-		//TODO: Check blog entry count in cache, if it doesn't exist add it.
-		
 		lazyModel = new LazyDataModel<BlogEntry>() {
 
 			@Override
@@ -94,8 +100,8 @@ public class BlogItemJSFController implements Serializable {
 					Map<String, String> filters) {
 				try {
 					// TODO: Obtain blog entry count from infinispan cache
-					setRowCount(_blogEntryGlobal.getBlogEntryCount());
-					return _blogfacade.getBlogEntries(first, pageSize);
+					setRowCount(_blogEntryGlobal.getBlogEntryCount(blogSection));
+					return _blogfacade.getBlogEntries(first, pageSize, blogSection);
 				} catch (SQLException e) {
 					e.printStackTrace();
 					return null;
@@ -103,8 +109,7 @@ public class BlogItemJSFController implements Serializable {
 			}
 
 		};
-		// TODO: Obtain blog entry count from infinispan cache
-		lazyModel.setRowCount(_blogEntryGlobal.getBlogEntryCount());
+		lazyModel.setRowCount(_blogEntryGlobal.getBlogEntryCount(blogSection));
 
 	}
 
@@ -127,7 +132,7 @@ public class BlogItemJSFController implements Serializable {
 
 		// now return all blog entries by category
 		try {
-			return _blogfacade.getBlogEntriesByCategory(this.catID);
+			return _blogfacade.getBlogEntriesByCategory(this.catID, blogSection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -147,7 +152,6 @@ public class BlogItemJSFController implements Serializable {
 	public void setCatID(long id) {
 		// valid category
 		boolean validCategory = false;
-		// TODO: Obtain it from infinispan cache
 		Map<Long, String> catMap = _blogEntryGlobal.getCategoryByIdMap();
 		if (catMap.containsKey(new Long(id))) {
 			validCategory = true;
@@ -181,6 +185,41 @@ public class BlogItemJSFController implements Serializable {
 		return this.catName;
 	}
 
+        /**
+ 	* Returns currently selected blog section name
+ 	*/  
+        public String getBlogSection() {
+		return this.blogSection;
+        }
+
+        /**
+ 	 * Select different blog section and update lazy data table
+         */	 
+	public void setBlogSection(String section) {
+		//determine invalid section and reverts to 'default' 
+		if(section != null && section.trim().length() > 0) {
+			if(_blogEntryGlobal.isValidBlogSection(section)) {
+				//only update section if it is not already selected.
+				if(!section.equals(blogSection)) {
+					blogSection = section;
+					init();
+				}
+			} else {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Invalid section", "Invalid section passed: " + section));
+
+			}
+                } else {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Invalid section", "Invalid (empty or null) section passed"));
+
+		}
+        }
+
 	/**
 	 * Return currently selected blog entry id
 	 * 
@@ -190,6 +229,9 @@ public class BlogItemJSFController implements Serializable {
 		return blogID;
 	}
 
+       /**
+ 	* This method is called when user request a specific blog entry.
+ 	*/ 	 
 	public void setBlogID(long blogID) {
 		this.blogID = blogID;
 
@@ -204,6 +246,8 @@ public class BlogItemJSFController implements Serializable {
 		}
 
 	}
+
+   
 
 	/**
 	 * Return currently selected blog entry
@@ -265,7 +309,11 @@ public class BlogItemJSFController implements Serializable {
 			return;
 		}
 		try {
+			//set blog section (or should we move it to web page (new.xhtml) as well?
+			newBlog.setBlogSection(this.blogSection);
 			_blogfacade.createBlog(newBlog);
+			//update data table to fetch the latest entry
+			init();
 			// update count in "global" cache
 			_blogEntryGlobal.updateBlogEntryCount();
 

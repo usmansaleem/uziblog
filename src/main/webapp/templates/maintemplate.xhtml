@@ -83,6 +83,21 @@
 				</p:dataTable>
 				</h:form>
 			</div>
+
+		    <div style="width: 90%; margin-left: auto; margin-right: auto; padding-bottom: 2em">
+				<h:form>
+				<p:dataTable value="#{blogentryglobal.blogSections}" var="section">
+					<p:column>  
+						<f:facet name="header">
+								<h:outputText value="Blog Section" />
+						</f:facet>
+						<h:link outcome="index" value="#{section}">
+							<f:param name="blogSection" value="#{section}"></f:param>
+						</h:link>
+					</p:column> 
+				</p:dataTable>
+				</h:form>
+			</div>
 			
 			<div id="links" class="ui-datatable ui-widget" style="width: 90%; margin-left: auto; margin-right: auto; padding-bottom: 2em">
 				<table>
