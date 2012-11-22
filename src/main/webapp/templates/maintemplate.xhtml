@@ -9,29 +9,10 @@
 	<h:head>
 		<title>Usman Saleem - <ui:insert name="title">Java, J2EE, JEE Blog</ui:insert>
 		</title>
-        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
-        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/themes/uzi/theme.css" />
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/themes/uzi/theme.css" />
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/syntax/themes/github.css" />
 		<h:outputStylesheet name="uzi.css" library="css" />
-		<ui:insert name="highlight">
-			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shCore.js"></script>
-			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shBrushBash.js"></script>
-			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shBrushJava.js"></script>
-			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shBrushSql.js"></script>
-			<script language="javascript" src="#{request.contextPath}/syntax/scripts/shBrushCpp.js"></script>
-		</ui:insert>
-		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/syntax/styles/shCore.css" />
-        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/syntax/styles/shThemeDefault.css" />
-        <!-- overriding for blog entries tables
-		<style type="text/css">		
-		.ui-datatable .ui-datatable-data td {
-			border: 0px;
-		}
-		
-		.ui-panel .ui-panel-titlebar {
-			padding: 0.5em 1em 0.5em;	
-		}
-		
-	</style-->
         <ui:insert name="head"></ui:insert>
 	</h:head>
 	<h:body>
@@ -184,13 +165,15 @@
                              <!-- Any future links, ad stuff etc. -->
 			</p>
 		</div>
-		
-		<script type="text/javascript">
-				 SyntaxHighlighter.config.stripBrs = true;
-				 SyntaxHighlighter.defaults['gutter'] = true;
-			     SyntaxHighlighter.all(); 
-		</script>
-
+		<!-- syntax hilighter stuff -->
+		<script src="#{request.contextPath}/syntax/rainbow.min.js"></script>
+		<script src="#{request.contextPath}/syntax/language/generic.js"></script>
+		<script src="#{request.contextPath}/syntax/language/c.js"></script>
+		<script src="#{request.contextPath}/syntax/language/css.js"></script>
+		<script src="#{request.contextPath}/syntax/language/html.js"></script>
+		<script src="#{request.contextPath}/syntax/language/java.js"></script>
+		<script src="#{request.contextPath}/syntax/language/javascript.js"></script>
+		<script src="#{request.contextPath}/syntax/language/shell.js"></script>
 	</h:body>
 	
 </f:view>
