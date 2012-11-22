@@ -47,7 +47,7 @@ CREATE TABLE blog_item (
     ibody text NOT NULL,
     imore text,
     itime timestamp without time zone NOT NULL,
-    blog_section_name character varying(30) DEFAULT 'Default'::character varying NOT NULL
+    blog_section_name character varying(30) DEFAULT 'Main'::character varying NOT NULL
 );
 
 
@@ -137,11 +137,10 @@ ALTER TABLE ONLY blog_item_categories
 
 
 --
--- Name: blog_item_blog_section_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: blog_section_name_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY blog_item
-    ADD CONSTRAINT blog_item_blog_section_name_fkey FOREIGN KEY (blog_section_name) REFERENCES blog_section(name);
+CREATE INDEX blog_section_name_idx ON blog_item USING btree (blog_section_name);
 
 
 --
