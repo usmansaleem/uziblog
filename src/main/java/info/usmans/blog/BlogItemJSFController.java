@@ -32,7 +32,7 @@ public class BlogItemJSFController implements Serializable {
 	 */
 	private static final long serialVersionUID = -1393772424698635004L;
 
-        protected static final String DEFAULT_BLOG_SECTION = "Default";
+        protected static final String DEFAULT_BLOG_SECTION = "Main";
 
 	/**
          * The main EJB containing our logic
