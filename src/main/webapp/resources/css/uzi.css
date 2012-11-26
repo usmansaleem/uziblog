@@ -70,37 +70,3 @@ h1 {
   text-decoration: none; !important 
 }
 
-@font-face
-{
-  font-family: nr; 
-  src:  url("#{resource['fonts:nafees_riqa.eot']}");
-}
-@font-face
-{
-  font-family: nr; 
-  src: url("#{resource['fonts:nafees_riqa.ttf']}") format('truetype');
-}
-
-@font-face
-{
-  font-family: hn; 
-  src:  url("#{resource['fonts:hussaini-nastaleeq.eot']}");
-}
-@font-face
-{
-  font-family: hn; 
-  src: url("#{resource['fonts:hussaini-nastaleeq.ttf']}") format('truetype');
-}
-#nrfont {
-  font-family: nr;
-  font-size: x-large;
-}
-	
-#hnfont {
-  font-family: hn;
-  font-size: x-large;
-}
-
-#hnfont-medium {
-  font-family: hn;
-}
