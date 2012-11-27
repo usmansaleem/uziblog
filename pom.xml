@@ -5,7 +5,7 @@
 
     <groupId>info.usmans</groupId>
     <artifactId>uziblog</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>war</packaging>
     <name>Java EE 6 webapp project</name>
     <description>A starter Java EE 6 webapp project for use on JBoss AS 7.1 / EAP 6, generated from the jboss-javaee6-webapp archetype</description>
@@ -113,14 +113,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- fixed dependency on the rss library - till I write my own -->
-        <!--dependency>
-           <groupId>viecili.jrss</groupId>
-           <artifactId>generator</artifactId>
-           <version>1.0</version>
-           <scope>system</scope>
-           <systemPath>/home/usman/sources/GIT-TREES/uzi/github/uziblog/src/main/webapp/WEB-INF/lib/jrss.jar</systemPath>
-        </dependency-->
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
@@ -130,7 +122,7 @@
         <dependency>
 	  <groupId>org.primefaces</groupId>
 	  <artifactId>primefaces</artifactId>
-	  <version>3.4</version>
+	  <version>3.4.2</version>
         </dependency>
 
     </dependencies>
@@ -240,6 +232,9 @@
                         <configuration>
                             <outputDirectory>deployments</outputDirectory>
                             <warName>ROOT</warName>
+			    <!-- Java EE 6 doesn't require web.xml,
+			         Maven needs to catch up! -->
+			    <failOnMissingWebXml>false</failOnMissingWebXml>
                         </configuration>
                     </plugin>
                 </plugins>
