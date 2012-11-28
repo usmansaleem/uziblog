@@ -1,13 +1,13 @@
 @font-face {
-    font-family: 'Hussaini Nastaleeq';
-    src:url('hussaini-nastaleeq.eot?#') format('embedded-opentype'),
-         url('hussaini-nastaleeq-webfont.woff') format('woff'),
-         url('hussaini-nastaleeq.ttf') format('truetype');
+    font-family: 'UsmanNastaleeq';
+    src: url('UsmanNastaleeq.eot?#') format('embedded-opentype'),
+         url('UsmanNastaleeq.woff') format('woff'),
+         url('UsmanNastaleeq.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 #hnfont {
-    font-family: 'Hussaini Nastaleeq';
+    font-family: 'UsmanNastaleeq';
     font-size: x-large;
 }
