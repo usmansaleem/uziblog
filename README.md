@@ -14,14 +14,14 @@ mvn package
 
 **Database (PostgreSQL) Set up**
 
-1. Create database 'blog'.
-2. Run schema.sql (and data.sql) from /schema in blog database.
+* Create database 'blog'.
+* Run schema.sql (and data.sql) from /schema in blog database.
 
 **Wildfly 8.2 Set up** 
 
-1. Create postgresql module in Wildfly:
-1.1 Download and copy `postgresql-9.4-1201.jdbc41.jar` to `<wildfly>/modules/org/postgresql/main/postgresql-9.4-1201.jdbc41.jar`
-1.2 Create `<wildfly>/modules/org/postgresql/main/module.xml`:
+* Create postgresql module in Wildfly:
+* Download and copy `postgresql-9.4-1201.jdbc41.jar` to `<wildfly>/modules/org/postgresql/main/postgresql-9.4-1201.jdbc41.jar`
+* Create `<wildfly>/modules/org/postgresql/main/module.xml`:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="urn:jboss:module:1.1" name="org.postgresql">
@@ -35,7 +35,7 @@ mvn package
      </dependencies>
 </module>
 ```
-2. Create datasource and driver in `<wildfly>/standalone/configuration/standalone.xml` (Update connection URL, user and password)
+* Create datasource and driver in `<wildfly>/standalone/configuration/standalone.xml` (Update connection URL, user and password)
 ```
             <datasources>
                 ...			
@@ -59,7 +59,7 @@ mvn package
             </datasources>
 
 ```
-3. Create security context in standalone.xml
+* Create security context in standalone.xml
 ```
        <subsystem xmlns="urn:jboss:domain:security:1.2">
             <security-domains>
@@ -73,11 +73,13 @@ mvn package
                     </authentication>
                 </security-domain>
 ```
-4. Create user roles configuration files in `<wildfly>/standalone/configuration/` (Update user/password to your choice): 
+* Create user roles configuration files in `<wildfly>/standalone/configuration/` (Update user/password to your choice):
+ 
 uziblog-users.properties:
 ~~~
 user=password
 ~~~
+
 uziblog-roles.properties:
 ~~~
 user=blogadmin
@@ -87,25 +89,30 @@ user=blogadmin
 
 The following instructions assume that you own a domain and running Wildfly in Amazon EC2 environment with direct host access.
 
-* Pre-steps *
+*Pre-steps*
 
-1. Generate CSR to request an SSL certificate from SSL provider (such as ssls.com or globessl.com)
+* Generate CSR to request an SSL certificate from SSL provider (such as ssls.com or globessl.com)
 `openssl req -new -newkey rsa:2048 -nodes -keyout yourdomain.com.key -out yourdomain.com.csr`
-2. Use the generated CSR to purchase a certificate.
-3. Merge all root and intermediate certificates in one file (provided by SSL Vendor) if required.
+
+* Use the generated CSR to purchase a certificate.
+
+* Merge all root and intermediate certificates in one file (provided by SSL Vendor) if required.
 ```
 cat COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt   > CAChainMerged.crt
 ```
-4. Export in pkcs12 format (yourdomain_com.crt is provided by SSL vendor).
+
+* Export in pkcs12 format (yourdomain_com.crt is provided by SSL vendor).
 ```
 openssl pkcs12 -export -out yourdomain.p12 -inkey yourdomain.com.key -in yourdomain_com.crt -name AnyFriendlyAliasYouWantToSpecify -chain -CAfile CAChainMerged.crt
 ```
 
-* Wildfly setup *
+*Wildfly setup*
 
-1. Place yourdomain.p12 in `<wildfly>/standalone/configuration/`
-2. Modify ``<wildfly>/standalone/configuration/standalone.xml`
-2.1 Create security realm:
+* Place yourdomain.p12 in `<wildfly>/standalone/configuration/`
+
+* Modify ``<wildfly>/standalone/configuration/standalone.xml`
+
+* Create security realm:
 ~~~
         <security-realms>
         ...
@@ -118,7 +125,8 @@ openssl pkcs12 -export -out yourdomain.p12 -inkey yourdomain.com.key -in yourdom
             </security-realm>
         </security-realms>
 ~~~
-2.2 Modify undertow subsystem to add https-listener
+
+* Modify undertow subsystem to add https-listener
 ~~~
         <subsystem xmlns="urn:jboss:domain:undertow:1.2">
             <buffer-cache name="default"/>
@@ -127,7 +135,8 @@ openssl pkcs12 -export -out yourdomain.p12 -inkey yourdomain.com.key -in yourdom
                 <https-listener name="defaulthttps" socket-binding="https" security-realm="UndertowRealm"/>
 				...
 ~~~
-2.3 Make sure https socket binding is enabled
+
+* Make sure https socket binding is enabled
 ~~~
     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
         ...
