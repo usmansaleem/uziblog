@@ -93,11 +93,10 @@ public class BlogItemJSFController implements Serializable {
 	@SuppressWarnings("serial")
 	public void init() {
 		lazyModel = new LazyDataModel<BlogEntry>() {
-
 			@Override
 			public List<BlogEntry> load(int first, int pageSize,
 					String sortField, SortOrder sortOrder,
-					Map<String, String> filters) {
+					Map<String, Object> filters) {
 				try {
 					// TODO: Obtain blog entry count from infinispan cache
 					setRowCount(_blogEntryGlobal.getBlogEntryCount(blogSection));

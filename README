@@ -1,29 +1,30 @@
-Uzi Blog.
+# Uzi Blog. Version 1.2
 
-My custom written blog using JEE web profile.
+Custom written blog using JEE web profile. 
 
-This is a maven based project and can be deployed automatically on openshift.
+**Tested with:**
+* Wildfly 8.2
+* PostgreSQL 9.4
+* Primefaces 5.2
 
-/schema contains database schema that is required to be executed on PostgreSQL.
+**Build:**
+mvn package
 
-http://usmans.info
-usman@usmans.info
-
--- JBoss AS 7.1/EAP 6 --
-Following configuration steps are required if application needs to be
-deployed on JBoss AS 7.1/EAP 6
-
+## Set up
+**Database (PostgreSQL) Set up**
 1. Create database 'blog'.
-2. Run schema.sql and data.sql from /schema in blog database.
-3. Create postgresql module in JBoss (HINT: update driver name):
+2. Run schema.sql (and data.sql) from /schema in blog database.
 
-<jboss>/modules/postgresql/main/postgresql-**.jar
-<jboss>/modules/postgresql/main/module.xml
+**Wildfly 8.2 Set up** 
+1. Create postgresql module in Wildfly:
 
+* Download and copy `postgresql-9.4-1201.jdbc41.jar` to `<wildfly>/modules/org/postgresql/main/postgresql-9.4-1201.jdbc41.jar`
+* Create `<wildfly>/modules/org/postgresql/main/module.xml`:
+```
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="urn:jboss:module:1.1" name="org.postgresql">
      <resources>
-         <resource-root path="postgresql-**.jdbc4.jar"/>
+         <resource-root path="postgresql-9.4-1201.jdbc41.jar"/>
      </resources>
      <dependencies>
          <module name="javax.api"/>
@@ -31,31 +32,38 @@ deployed on JBoss AS 7.1/EAP 6
          <module name="javax.servlet.api" optional="true"/>
      </dependencies>
 </module>
+```
 
-4. Create datasource and driver in standalone.xml (HINT: update user)
-
-                <datasource jndi-name="java:/uziblogds" pool-name="uziblogds" enabled="true" use-java-context="true" jta="true" use-ccm="true">
-                    <connection-url>jdbc:postgresql://localhost:5432/blog</connection-url>
-                    <!--driver-class>org.postgresql.Driver</driver-class-->
+2. Create datasource and driver in `<wildfly>/standalone/configuration/standalone.xml` (Update connection URL, user and password)
+```
+            <datasources>
+                ...			
+                 <datasource jta="true" jndi-name="java:/uziblogds" pool-name="uziblogds" enabled="true" use-java-context="true" use-ccm="true">
+                    <connection-url>jdbc:postgresql://somehost.ap-southeast-2.rds.amazonaws.com:5432/blog</connection-url>
                     <driver>postgresql</driver>
                     <security>
-                      <user-name>user</user-name>
-                      <password>password</password>
+                        <user-name>user</user-name>
+                        <password>password</password>
                     </security>
                     <validation>
-                      <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
-                        </validation>
-
+                        <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+                    </validation>
                 </datasource>
-
-
+                <drivers>
+                    ...
                     <driver name="postgresql" module="org.postgresql">
                         <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
                     </driver>
+                </drivers>
+            </datasources>
 
+```
 
-5. Create security context in standalone.xml
-
+3. Create security context in standalone.xml
+```
+       <subsystem xmlns="urn:jboss:domain:security:1.2">
+            <security-domains>
+                ...
                 <security-domain name="uziblog" cache-type="default">
                     <authentication>
                         <login-module code="UsersRoles" flag="required">
@@ -64,170 +72,80 @@ deployed on JBoss AS 7.1/EAP 6
                         </login-module>
                     </authentication>
                 </security-domain>
+```
 
+4. Create user roles configuration files in `<wildfly>/standalone/configuration/` (Update user/password to your choice): 
 
-5.1 Create user roles configuration files (HINT: modify 'user'): 
-
-<jboss>/standalone/configuration/uziblog-users.properties:
+uziblog-users.properties:
+~~~
 user=password
-
-<jboss>/standalone/configuration/uziblog-roles.properties:
+~~~
+uziblog-roles.properties:
+~~~
 user=blogadmin
+~~~
 
-6. Rock and roll.
+### Enabling SSL in Wildfly
 
--- OpenShift specific details --
+The following instructions assume that you own a domain and running Wildfly in Amazon EC2 environment with direct host access.
 
-Repo layout
-=========== 
-deployments/ - location for built wars (Details below)
-src/ - Maven src structure
-pom.xml - Maven build file  
-.openshift/ - location for openshift specific files
-.openshift/config/ - location for configuration files such as standalone.xml (used to modify jboss config such as datasources) 
-.openshift/action_hooks/pre_build - Script that gets run every git push before the build (on the CI system if available)
-.openshift/action_hooks/build - Script that gets run every git push as part of the build process (on the CI system if available)
-.openshift/action_hooks/deploy - Script that gets run every git push after build but before the app is restarted
-.openshift/action_hooks/post_deploy - Script that gets run every git push after the app is restarted
+* Pre-steps *
+1. Generate CSR to request an SSL certificate from SSL provider (such as ssls.com or globessl.com)
+`openssl req -new -newkey rsa:2048 -nodes -keyout yourdomain.com.key -out yourdomain.com.csr`
+2. Use the generated CSR to purchase a certificate.
+3. Merge all root and intermediate certificates in one file (provided by SSL Vendor) if required.
+```
+cat COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt   > CAChainMerged.crt
+```
+4. Export in pkcs12 format (yourdomain_com.crt is provided by SSL vendor).
+```
+openssl pkcs12 -export -out yourdomain.p12 -inkey yourdomain.com.key -in yourdomain_com.crt -name AnyFriendlyAliasYouWantToSpecify -chain -CAfile CAChainMerged.crt
+```
 
-Notes about layout
-==================
-Note: Every time you push, everything in your remote repo dir gets recreated
-      please store long term items (like an sqlite database) in the OpenShift
-      data directory, which will persist between pushes of your repo.
-      The OpenShift data directory is accessible relative to the remote repo
-      directory (../data) or via an environment variable OPENSHIFT_DATA_DIR.
+* Wildfly setup *
+1. Place yourdomain.p12 in `<wildfly>/standalone/configuration/`
+2. Modify ``<wildfly>/standalone/configuration/standalone.xml`
+2.1 Create security realm:
+~~~
+        <security-realms>
+        ...
+            <security-realm name="UndertowRealm">
+                <server-identities>
+                    <ssl>
+                        <keystore provider="pkcs12" path="yourdomain.p12" relative-to="jboss.server.config.dir" keystore-password="SomePassword" alias="AnyFriendlyAliasYouWantToSpecify" key-password="SomePassword"/>
+                    </ssl>
+                </server-identities>
+            </security-realm>
+        </security-realms>
+~~~
+2.2 Modify undertow subsystem to add https-listener
+~~~
+        <subsystem xmlns="urn:jboss:domain:undertow:1.2">
+            <buffer-cache name="default"/>
+            <server name="default-server">
+                <http-listener name="default" socket-binding="http"/>
+                <https-listener name="defaulthttps" socket-binding="https" security-realm="UndertowRealm"/>
+				...
+~~~
+2.3 Make sure https socket binding is enabled
+~~~
+    <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
+        ...
+        <socket-binding name="https" port="${jboss.https.port:8443}"/>
+		...
+~~~
 
+## Deployment
+Deploy as ROOT.war in standalone/deployment.
 
-Details about layout and deployment options
-==================
-There are two options for deploying content to the JBoss Application Server within OpenShift:
-
-1) (Preferred) You can upload your content in a Maven src structure as is this sample project and on 
-git push have the application built and deployed.  For this to work you'll need your pom.xml at the 
-root of your repository and a maven-war-plugin like in this sample to move the output from the build
-to the deployments directory.  By default the warName is ROOT within pom.xml.  This will cause the 
-webapp contents to be rendered at http://app_name-namespace.rhcloud.com/.  If you change the warName in 
-pom.xml to app_name, your base url would then become http://app_name-namespace.rhcloud.com/app_name.
-
-Note: If you are building locally you'll also want to add any output wars/ears under deployments 
-from the build to your .gitignore file.
-
-or
-
-2) You can git push prebuilt wars (with the corresponding .dodeploy file for exploded wars) into deployments/.  To do this
-with the default repo you'll want to first run 'git rm -r src/ pom.xml' from the root of your repo.
-
-Basic workflows for deploying prebuilt content (each operation will require associated git add/commit/push operations to take effect):
-
-A) Add new zipped content and deploy it:
-
-1. cp target/example.war deployments/
-
-B) Add new unzipped content and deploy it:
-
-1. cp -r target/example.war/ deployments/
-2. touch deployments/example.war.dodeploy
-
-C) Undeploy currently deployed content:
-
-1. git rm deployments/example.war.dodeploy deployments/example.war
-
-D) Replace currently deployed zipped content with a new version and deploy it:
-
-1. cp target/example.war deployments/
-
-E) Replace currently deployed unzipped content with a new version and deploy it:
-
-1. git rm -rf deployments/example.war/
-2. cp -r target/example.war/ deployments/
-3. touch deployments/example.war.dodeploy
-
-WARNING:  If you go with option 2) there are a couple issues to keep in mind with both prebuilt and exploded 
-wars.  With exploded wars the main issue is with committing binaries (class and jar files) can make merge 
-conflicts tedious. With prebuilt wars the main issue is each time you modify the war and git push, it 
-takes up the size of the war file away from your OpenShift file system quota.  One alternative to this 
-(other then using Maven from option 1) is to use rsync to push your war into the deployments folder.  You 
-would have to do this after each git push followed by 'rhc app restart -a appname'.  Example:
-
-rsync -avz localdir/deployments/ app_uuid@appname-namespace.rhcloud.com:~/appname/repo/deployments/
-
-Note: You can get the information in the uri above from running 'rhc domain show'
-
-If you have already committed large files to your git repo, you rewrite or reset the history of those files in git
-to an earlier point in time and then 'git push --force' to apply those changes on the remote OpenShift server.  A 
-git gc on the remote OpenShift repo can be forced with (Note: tidy also does other cleanup including clearing log
-files and tmp dirs):
-
-rhc app tidy -a appname
+## Re-routing 80 and 443 to 8080 and 8443 respectively (assuming EC2 environment and respective security groups are already configured)
+~~~
+sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
+service iptables save
+~~~
 
 
-Whether you choose option 1) or 2) the end result will be the application 
-deployed into the deployments directory. The deployments directory in the 
-JBoss Application Server distribution is the location end users can place 
-their deployment content (e.g. war, ear, jar, sar files) to have it 
-automatically deployed into the server runtime.
-
-The filesystem deployment scanner in AS 7 and later works differently from 
-previous JBoss AS releases. The scanner will no longer attempt to directly 
-monitor the deployment content and decide if or when the end user wishes 
-the content to be deployed. Instead, the scanner relies on a system of marker 
-files, with the user's addition or removal of a marker file serving as a sort
-of command telling the scanner to deploy, undeploy or redeploy content.
-
-The marker files always have the same name as the deployment content to which
-they relate, but with an additional file suffix appended. For example, the 
-marker file to indicate the example.war should be deployed is named 
-example.war.dodeploy. Different marker file suffixes have different meanings.
-
-The relevant marker file types are:
-
-.dodeploy     -- Placed by the user to indicate that the given content should 
-                 be deployed into the runtime (or redeployed if already 
-                 deployed in the runtime.)
-
-.deploying    -- Placed by the deployment scanner service to indicate that it 
-                 has noticed a .dodeploy file and is in the process of 
-                 deploying the content. This marker file will be deleted when 
-                 the deployment process completes.
-              
-.deployed     -- Placed by the deployment scanner service to indicate that the 
-                 given content has been deployed into the runtime. If an end 
-                 user deletes this file, the content will be undeployed.
-               
-.faileddeploy -- Placed by the deployment scanner service to indicate that the 
-                 given content failed to deploy into the runtime. The content 
-                 of the file will include some information about the cause of 
-                 the failure.
-
-.undeploying  -- Placed by the deployment scanner service to indicate that it 
-                 has noticed a .deployed file has been deleted and the 
-                 content is being undeployed. This marker file will be deleted 
-                 when the undeployment process completes.
-              
-.undeployed   -- Placed by the deployment scanner service to indicate that the 
-                 given content has been undeployed from the runtime. If an end 
-                 user deletes this file, it has no impact.
+ 
 
 
-Environment Variables
-=====================
-
-OpenShift provides several environment variables to reference for ease
-of use.  The following list are some common variables but far from exhaustive:
-
-    System.getenv("OPENSHIFT_GEAR_NAME")  - Application name
-    System.getenv("OPENSHIFT_GEAR_DIR")   - Application dir
-    System.getenv("OPENSHIFT_DATA_DIR")  - For persistent storage (between pushes)
-    System.getenv("OPENSHIFT_TMP_DIR")   - Temp storage (unmodified files deleted after 10 days)
-
-When embedding a database using 'rhc app cartridge add', you can reference environment
-variables for username, host and password:
-
-    System.getenv("OPENSHIFT_DB_HOST")      - DB host
-    System.getenv("OPENSHIFT_DB_PORT")      - DB Port
-    System.getenv("OPENSHIFT_DB_USERNAME")  - DB Username
-    System.getenv("OPENSHIFT_DB_PASSWORD")  - DB Password
-
-To get a full list of environment variables, simply add a line in your
-.openshift/action_hooks/build script that says "export" and push.

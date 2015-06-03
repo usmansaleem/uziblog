@@ -52,12 +52,12 @@
    <auth-constraint>
       <role-name>blogadmin</role-name>
    </auth-constraint>
-   <!--
+
    <user-data-constraint>
      <description>These resources should be served securily.</description>
-     <transport-guarantee>NONE</transport-guarantee>
+     <transport-guarantee>CONFIDENTIAL</transport-guarantee>
    </user-data-constraint>
-  -->
+
   </security-constraint>
   
   <security-role>
