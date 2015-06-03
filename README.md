@@ -11,15 +11,17 @@ Custom written blog using JEE web profile.
 mvn package
 
 ## Set up
+
 **Database (PostgreSQL) Set up**
+
 1. Create database 'blog'.
 2. Run schema.sql (and data.sql) from /schema in blog database.
 
 **Wildfly 8.2 Set up** 
-1. Create postgresql module in Wildfly:
 
-* Download and copy `postgresql-9.4-1201.jdbc41.jar` to `<wildfly>/modules/org/postgresql/main/postgresql-9.4-1201.jdbc41.jar`
-* Create `<wildfly>/modules/org/postgresql/main/module.xml`:
+1. Create postgresql module in Wildfly:
+1.1 Download and copy `postgresql-9.4-1201.jdbc41.jar` to `<wildfly>/modules/org/postgresql/main/postgresql-9.4-1201.jdbc41.jar`
+1.2 Create `<wildfly>/modules/org/postgresql/main/module.xml`:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="urn:jboss:module:1.1" name="org.postgresql">
@@ -33,7 +35,6 @@ mvn package
      </dependencies>
 </module>
 ```
-
 2. Create datasource and driver in `<wildfly>/standalone/configuration/standalone.xml` (Update connection URL, user and password)
 ```
             <datasources>
@@ -58,7 +59,6 @@ mvn package
             </datasources>
 
 ```
-
 3. Create security context in standalone.xml
 ```
        <subsystem xmlns="urn:jboss:domain:security:1.2">
@@ -73,9 +73,7 @@ mvn package
                     </authentication>
                 </security-domain>
 ```
-
 4. Create user roles configuration files in `<wildfly>/standalone/configuration/` (Update user/password to your choice): 
-
 uziblog-users.properties:
 ~~~
 user=password
@@ -90,6 +88,7 @@ user=blogadmin
 The following instructions assume that you own a domain and running Wildfly in Amazon EC2 environment with direct host access.
 
 * Pre-steps *
+
 1. Generate CSR to request an SSL certificate from SSL provider (such as ssls.com or globessl.com)
 `openssl req -new -newkey rsa:2048 -nodes -keyout yourdomain.com.key -out yourdomain.com.csr`
 2. Use the generated CSR to purchase a certificate.
@@ -103,6 +102,7 @@ openssl pkcs12 -export -out yourdomain.p12 -inkey yourdomain.com.key -in yourdom
 ```
 
 * Wildfly setup *
+
 1. Place yourdomain.p12 in `<wildfly>/standalone/configuration/`
 2. Modify ``<wildfly>/standalone/configuration/standalone.xml`
 2.1 Create security realm:
@@ -144,8 +144,3 @@ sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port
 sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
 service iptables save
 ~~~
-
-
- 
-
-
