@@ -8,12 +8,12 @@
 	<ui:define name="content">
 	
 	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
-		<h:form rendered="#{p:ifGranted('blogadmin')}">
+		<h:form id="newform" rendered="#{p:ifGranted('blogadmin')}">
 			<p:messages showDetail="true" autoUpdate="true"/> 
 		
 			<p:panel id="panel" rendered="#{p:ifGranted('blogadmin')}">
 				<f:facet name="header">
-					<h:outputText value="New Blog Entry. Section: #{blogcontroller.blogSection}" />
+					<h:outputText value="New Entry. Section: #{blogcontroller.blogSection}" />
 				</f:facet>
 				
 				<h:panelGrid columns="2">
