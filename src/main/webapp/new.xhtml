@@ -31,8 +31,8 @@
 				
 				<f:facet name="footer">
 					<p:remoteCommand name="codeblock" update="blogbody" actionListener="#{blogcontroller.insertCodeBlock}" />
-					<p:commandButton type="button" value="Code Block" onclick="codeblock()" />
-					<p:commandButton value="Save" actionListener="#{blogcontroller.createBlog}" />
+					<p:commandButton type="button" icon="fa fa-code" value="Code Block" onclick="codeblock()" />
+					<p:commandButton value="Save" icon="fa fa-save" actionListener="#{blogcontroller.createBlog}" />
 				</f:facet>
 			</p:panel>
 

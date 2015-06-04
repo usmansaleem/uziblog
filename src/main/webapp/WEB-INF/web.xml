@@ -18,6 +18,10 @@
     <param-value>none</param-value>
   </context-param>
   <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+  </context-param>
+  <context-param>
     <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
     <param-value>6LdeAdcSAAAAABJxqFr0LFoPXFbrBI7ItJM2Cewn</param-value>
   </context-param>
