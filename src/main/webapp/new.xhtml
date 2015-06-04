@@ -30,6 +30,8 @@
 				</h:panelGrid>
 				
 				<f:facet name="footer">
+					<p:remoteCommand name="codeblock" update="blogbody" actionListener="#{blogcontroller.insertCodeBlock}" />
+					<p:commandButton type="button" value="Code Block" onclick="codeblock()" />
 					<p:commandButton value="Save" actionListener="#{blogcontroller.createBlog}" />
 				</f:facet>
 			</p:panel>

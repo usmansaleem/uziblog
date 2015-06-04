@@ -326,7 +326,7 @@ public class BlogItemJSFController implements Serializable {
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Database Error while creating blog", e
-									.getMessage()));
+							.getMessage()));
 		}
 	}
 
@@ -340,5 +340,13 @@ public class BlogItemJSFController implements Serializable {
 		// TODO Add actual comment
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 
+	}
+
+	public void insertCodeBlock() {
+		if(newBlog != null) {
+			StringBuilder sb = new StringBuilder(newBlog.getBody());
+			sb.append("<pre><code data-language=\"bash\"> </code></pre>");
+			newBlog.setBody(sb.toString());
+		}
 	}
 }
