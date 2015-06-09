@@ -90,27 +90,29 @@ user=blogadmin
 The following instructions assume that you own a domain and running Wildfly in Amazon EC2 environment with direct host access.
 
 *Pre-steps*
+* Generate Encrypted Key 
+`openssl genrsa -des3 -out yourdomain.enc.key 2048`
 
 * Generate CSR to request an SSL certificate from SSL provider (such as ssls.com or globessl.com)
-`openssl req -new -newkey rsa:2048 -nodes -keyout yourdomain.com.key -out yourdomain.com.csr`
+`openssl req -new -sha256 -key yourdomain.enc.key -out yourdomain.csr`
 
 * Use the generated CSR to purchase a certificate.
 
-* Merge all root and intermediate certificates in one file (provided by SSL Vendor) if required.
+* Merge all root and intermediate certificates in one file (provided by SSL Vendor) - if required.
 ```
 cat COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt   > CAChainMerged.crt
 ```
 
 * Export in pkcs12 format (yourdomain_com.crt is provided by SSL vendor).
 ```
-openssl pkcs12 -export -out yourdomain.p12 -inkey yourdomain.com.key -in yourdomain_com.crt -name AnyFriendlyAliasYouWantToSpecify -chain -CAfile CAChainMerged.crt
+openssl pkcs12 -export -out yourdomain.p12 -inkey yourdomain.enc.key -in yourdomain_com.crt -name AnyFriendlyAliasYouWantToSpecify -chain -CAfile CAChainMerged.crt
 ```
 
 *Wildfly setup*
 
 * Place yourdomain.p12 in `<wildfly>/standalone/configuration/`
 
-* Modify ``<wildfly>/standalone/configuration/standalone.xml`
+* Modify `<wildfly>/standalone/configuration/standalone.xml`
 
 * Create security realm:
 ~~~
