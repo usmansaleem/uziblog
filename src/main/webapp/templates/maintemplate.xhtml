@@ -39,8 +39,14 @@
 						       <p:button icon="fa fa-archive" outcome="archive" value="Archives" />
 						       <p:button icon="fa fa-file" outcome="notes" value="Notes" />
 						       <p:button icon="fa fa-info" outcome="about" value="About" />
-						       <p:button icon="fa fa-plus" outcome="new" rendered="#{p:ifGranted('blogadmin')}" value="New Blog Entry" />
+						       <p:button icon="fa fa-plus" outcome="new" rendered="#{p:ifGranted('blogadmin')}" value="" />
 						    </div>
+							<div style="float: right;">
+								<p:button icon="fa fa-sign-in" outcome="new" rendered="#{p:ifNotGranted('blogadmin')}" value="" />
+								<h:form id="logoutform" rendered="#{p:ifGranted('blogadmin')}">
+							   		<p:commandButton rendered="#{p:ifGranted('blogadmin')}" icon="fa fa-sign-out" action="#{blogcontroller.logout}"  value="" />
+								</h:form>
+							</div>
 						</td>
 					</tr>
 				</tbody>

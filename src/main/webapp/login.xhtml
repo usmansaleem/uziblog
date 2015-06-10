@@ -11,6 +11,7 @@
 		<h:outputText value="Welcome: #{p:remoteUser()}. You are already logged in." />
 	</p:panel>
 	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">
+<!--
 		<form action='j_security_check' method='post'>
 			<table>
 				<tr><td>User:</td><td><input name='j_username'></input></td></tr>
@@ -18,6 +19,16 @@
 				<tr><td><input type='submit'></input></td></tr>
 			</table>
 		</form>
+-->
+		<h:form id="login" onsubmit="document.getElementById('login').action='j_security_check';" prependId="false">
+			<h:panelGrid columns="2">
+				<p:outputLabel for="j_username" value="Username" />
+				<p:inputText id="j_username" name="j_username" />
+				<p:outputLabel for="j_password" value="Password" />
+				<p:password id="j_password" name="j_password"/>
+				<p:commandButton id="submit" value="Login" ajax="false"/>
+			</h:panelGrid>
+		</h:form>
 	</div>
 	</ui:define>
 </ui:composition>

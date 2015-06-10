@@ -52,6 +52,8 @@
       <web-resource-name>Restricted Blog Access</web-resource-name>
       <url-pattern>/edit.xhtml</url-pattern>
       <url-pattern>/new.xhtml</url-pattern>
+      <http-method>POST</http-method>
+      <http-method>GET</http-method>
    </web-resource-collection>
    <auth-constraint>
       <role-name>blogadmin</role-name>
@@ -67,11 +69,21 @@
   <security-role>
           <role-name>blogadmin</role-name>
   </security-role>
-  
+
+    <!--
   <login-config>
     <auth-method>BASIC</auth-method>
     <realm-name>usmans.info</realm-name>
   </login-config>
+ -->
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>usmans.info</realm-name>
+        <form-login-config>
+            <form-login-page>/login.xhtml</form-login-page>
+            <form-error-page>/error.xhtml</form-error-page>
+        </form-login-config>
+    </login-config>
 
   <mime-mapping>
         <extension>ttf</extension>

@@ -349,4 +349,9 @@ public class BlogItemJSFController implements Serializable {
 			newBlog.setBody(sb.toString());
 		}
 	}
+
+	public String logout() {
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "/index.xhtml?faces-redirect=true";
+	}
 }
