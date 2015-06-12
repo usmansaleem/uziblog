@@ -11,7 +11,11 @@
 		converter="javax.faces.Integer"
 		converterMessage="Blog id must be an integer" />	
 	</f:metadata>
-	<ui:define name="title">Blog Entry - <h:outputText value="#{blogcontroller.blog.title}"></h:outputText> </ui:define>
+	<ui:define name="title">Usman Saleem - Blog Entry - <h:outputText value="#{blogcontroller.blog.title}"></h:outputText> </ui:define>
+	<ui:define name="head">
+		<meta name="description" content="Usman Saleem Blog Detail Page. #{blogcontroller.blog.title}" />
+		<meta name="keywords" content="Usman Saleem, Java, JEE, Blog, PostgreSQL, Detail" />
+	</ui:define>
 	<ui:define name="content">
 	
 	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">

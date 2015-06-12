@@ -11,9 +11,11 @@
 		converterMessage="Category id must be an integer"/>
 	</f:metadata>
 	
-	<ui:define name="title">Section: <h:outputText value="#{blogcontroller.blogSection}" />, Blog Entries by Category <h:outputText value="#{blogcontroller.catName}" /></ui:define>
+	<ui:define name="title">Usman Saleem - Blog Section: <h:outputText value="#{blogcontroller.blogSection}" /> - Category <h:outputText value="#{blogcontroller.catName}" /></ui:define>
 	<ui:define name="head">
-	<link rel="alternate" type="application/rss+xml" title="RSS" href="#{request.contextPath}/rss?catID=#{blogcontroller.catID}" />
+		<link rel="alternate" type="application/rss+xml" title="RSS" href="#{request.contextPath}/rss?catID=#{blogcontroller.catID}" />
+		<meta name="description" content="Usman Saleem Blog Entries by Category #{blogcontroller.catName}." />
+		<meta name="keywords" content="Usman Saleem, Java, JEE, Blog, PostgreSQL, #{blogcontroller.catName}" />
 	</ui:define>
 	<ui:define name="content">
 	<div style="width: 90%; margin-left: auto; margin-right: auto;padding-top: 2em; padding-bottom: 2em">

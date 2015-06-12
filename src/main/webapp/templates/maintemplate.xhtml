@@ -7,9 +7,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <f:view contentType="text/html">
 	<h:head>
-		<title>Usman Saleem - <ui:insert name="title">Java, J2EE, JEE Blog</ui:insert>
-		</title>
+		<title><ui:insert name="title">Usman Saleem - Java, J2EE, JEE Blog</ui:insert></title>
 		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+		<meta name="author" content="Usman Saleem" />
 		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/themes/uzi/theme.css" />
 		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/syntax/themes/github.css" />
 		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/font.css" />
@@ -39,12 +39,12 @@
 						       <p:button icon="fa fa-archive" outcome="archive" value="Archives" />
 						       <p:button icon="fa fa-file" outcome="notes" value="Notes" />
 						       <p:button icon="fa fa-info" outcome="about" value="About" />
-						       <p:button icon="fa fa-plus" outcome="new" rendered="#{p:ifGranted('blogadmin')}" value="" />
+						       <p:button icon="fa fa-plus" outcome="new" rendered="#{p:ifGranted('blogadmin')}" title="New" />
 						    </div>
 							<div style="float: right;">
-								<p:button icon="fa fa-sign-in" outcome="new" rendered="#{p:ifNotGranted('blogadmin')}" value="" />
+								<p:button icon="fa fa-sign-in" outcome="new" rendered="#{p:ifNoneGranted('blogadmin')}" title="Sign in" />
 								<h:form id="logoutform" rendered="#{p:ifGranted('blogadmin')}">
-							   		<p:commandButton rendered="#{p:ifGranted('blogadmin')}" icon="fa fa-sign-out" action="#{blogcontroller.logout}"  value="" />
+							   		<p:commandButton rendered="#{p:ifGranted('blogadmin')}" icon="fa fa-sign-out" action="#{blogcontroller.logout}"  title="Sign out" />
 								</h:form>
 							</div>
 						</td>

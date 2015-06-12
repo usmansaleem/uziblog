@@ -6,11 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
@@ -89,6 +85,19 @@ public class BlogItemSessionEJB {
 		}
 
 		return count;
+	}
+
+	public List<Integer> getMainBlogEntriesIdList() {
+		String sql = "SELECT inumber FROM blog_item WHERE blog_section_name='Main' ORDER BY itime desc";
+		List<Integer> ids = new LinkedList<Integer>();
+		try(Connection con = _ds.getConnection(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+			while(rs.next()) {
+				ids.add(rs.getInt(1));
+			}
+		}catch (SQLException sqe) {
+			sqe.printStackTrace(); //TODO: Provide a better handling
+		}
+		return ids;
 	}
 
 	public List<BlogEntry> getBlogEntries(int offset, int limit, String section)

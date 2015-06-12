@@ -11,10 +11,12 @@
 		<f:viewParam required="false" name="blogSection" value="#{blogcontroller.blogSection}" />
 	</f:metadata>
 
-	<ui:define name="title">Blog - <h:outputText value="#{blogcontroller.blogSection}"/></ui:define>
+	<ui:define name="title">Usman Saleem - Blog - <h:outputText value="#{blogcontroller.blogSection}"/></ui:define>
 	
 	<ui:define name="head">
-	<link rel="alternate" type="application/rss+xml" title="RSS" href="#{request.contextPath}/rss" />
+		<link rel="alternate" type="application/rss+xml" title="RSS" href="#{request.contextPath}/rss" />
+		<meta name="description" content="Usman Saleem Blog main page. This blog discuss various topics covering Java, JBoss and other IT related stuff." />
+		<meta name="keywords" content="Usman Saleem, Java, JEE, Blog, PostgreSQL, expert Java Programmer" />
 	</ui:define>
 	
 	<ui:define name="content">
@@ -58,7 +60,7 @@
 											
 										</ui:repeat>
 										
-										<p:button outcome="edit" rendered="#{p:ifGranted('blogadmin')}" value="Edit">
+										<p:button icon="fa fa-edit" outcome="edit" rendered="#{p:ifGranted('blogadmin')}" title="Edit">
 											<f:param name="blogID" value="#{bl.id}"></f:param>
 										</p:button>
 							</div>
