@@ -35,11 +35,6 @@ import javax.servlet.ServletContext;
 @Named("blogentryglobal")
 @Default
 public class BlogEntryGlobal implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6685044061281980471L;
-
 	@Inject
 	private BlogItemSessionEJB _blogfacade;
 
@@ -53,10 +48,11 @@ public class BlogEntryGlobal implements Serializable {
 	private String globalRSSFeed;
 	private Map<Long, String> rssFeedByCat = new TreeMap<Long, String>();
 	
-	private String databaseInfo = "Unknown";
+	private String databaseInfo = "UnknownDatabase";
 	private String serverInfo;
 	private String jsfTitle;
 	private String jsfVersion;
+	private String javaVersion = System.getProperty("java.runtime.name") + " " + System.getProperty("java.version");
 
 	public BlogEntryGlobal() {
 	}
@@ -307,6 +303,10 @@ public class BlogEntryGlobal implements Serializable {
 	 */
 	public String getDatabaseInfo() {
 		return databaseInfo;
+	}
+
+	public String getJavaVersion() {
+		return this.javaVersion;
 	}
 
 }

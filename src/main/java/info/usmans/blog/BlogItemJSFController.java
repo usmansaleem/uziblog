@@ -361,7 +361,7 @@ public class BlogItemJSFController implements Serializable {
 	}
 
 	public String convertTime(Date date){
-		Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+		Format format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		return format.format(date);
 	}
 }
