@@ -3,6 +3,9 @@ package info.usmans.blog;
 import java.io.Serializable;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -355,5 +358,10 @@ public class BlogItemJSFController implements Serializable {
 	public String logout() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "/index.xhtml?faces-redirect=true";
+	}
+
+	public String convertTime(Date date){
+		Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+		return format.format(date);
 	}
 }

@@ -47,6 +47,7 @@ CREATE TABLE blog_item (
     ibody text NOT NULL,
     imore text,
     itime timestamp without time zone NOT NULL,
+    mtime timestamp without time zone,
     blog_section_name character varying(30) DEFAULT 'Main'::character varying NOT NULL
 );
 

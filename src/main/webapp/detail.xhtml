@@ -23,7 +23,8 @@
 		<p:panel header="#{blogcontroller.blog.title}">
 			<h:outputText escape="false" value="#{blogcontroller.blog.body}" />
 			<f:facet name="footer">
-				<h:outputText style="font-size: x-small;" value="Created On: #{blogcontroller.blog.createdon}" />
+				<h:outputText style="font-size: x-small;" value="Created On: #{blogcontroller.convertTime(blogcontroller.blog.createdon)}" />
+				<h:outputText style="font-size: x-small;" value=" | Last Modified On: #{blogcontroller.convertTime(blogcontroller.blog.modifiedOn)}" />
 				<h:outputText style="font-size: x-small;" value = " | Categories: " />
 				<ui:repeat var="cat" value="#{blogcontroller.blog.categories}">
 			 

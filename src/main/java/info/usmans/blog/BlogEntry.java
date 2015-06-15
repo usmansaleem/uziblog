@@ -18,6 +18,7 @@ public class BlogEntry implements Serializable {
 	private Date createdon;
 	private Long[] categories;
         private String blogSection = "default";
+	private Date modifiedOn;
 
 	public long getId() {
 		return id;
@@ -57,6 +58,14 @@ public class BlogEntry implements Serializable {
 
 	public void setCreatedon(Date createdon) {
 		this.createdon = createdon;
+	}
+
+	public Date getModifiedOn() {
+			return modifiedOn;
+	}
+
+	public void setModifiedOn(Date modifiedOn) {
+		this.modifiedOn = modifiedOn;
 	}
 
 	public Long[] getCategories() {
