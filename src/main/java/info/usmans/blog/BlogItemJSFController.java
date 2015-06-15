@@ -268,7 +268,7 @@ public class BlogItemJSFController implements Serializable {
 	/**
 	 * Save selected blog
 	 */
-	public void saveBlog() {
+	public String saveBlog() {
 		try {
 			_blogfacade.updateBlog(this.selectedBlogEntry);
                         //update RSS feed to cater for new changes.
@@ -294,6 +294,8 @@ public class BlogItemJSFController implements Serializable {
 									"IOException while updating blog RSS feed", e
 											.getMessage()));
                 }
+
+		return "/detail.xhtml?blogID="+this.selectedBlogEntry.getId() + "&faces-redirect=true";
 	}
 
 	/**

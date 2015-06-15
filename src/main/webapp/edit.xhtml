@@ -25,7 +25,7 @@
 					<p:inputText id="blogtitle" value="#{blogcontroller.blog.title}" required="true"/>
 				
 					<h:outputLabel for="blogbody" value="Body"  />
-					<p:inputTextarea id="blogbody" style="width:600px" value="#{blogcontroller.blog.body}" required="true"/>
+					<p:inputTextarea id="blogbody" rows="20" cols="80" value="#{blogcontroller.blog.body}" required="true"/>
 				
 					<h:outputLabel for="blogCategories" value="Select Categories"/>
 					<h:selectManyCheckbox id="blogCategories" value="#{blogcontroller.blog.categories}">
@@ -34,7 +34,7 @@
 				</h:panelGrid>
 				
 				<f:facet name="footer">
-					<p:commandButton value="Save" actionListener="#{blogcontroller.saveBlog}" />
+					<p:commandButton icon="fa fa-save" value="Save" action="#{blogcontroller.saveBlog}" />
 				</f:facet>
 			</p:panel>
 

@@ -33,6 +33,9 @@
 				 	<h:outputText style="font-size: x-small;" value = ", " />
 					
 				</ui:repeat>
+				<p:button icon="fa fa-edit" outcome="edit" rendered="#{p:ifGranted('blogadmin')}" title="Edit">
+					<f:param name="blogID" value="#{blogcontroller.blog.id}"></f:param>
+				</p:button>
 			</f:facet>
 		</p:panel>
 		
