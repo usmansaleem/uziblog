@@ -256,9 +256,9 @@ public class BlogItemSessionEJB {
     public BlogEntry getBlogEntryById(long blogID) throws SQLException {
         BlogEntry e = new BlogEntry();
         e.setId(0);
-        e.setTitle("");
-        e.setBody("");
-        e.setMore("");
+        e.setTitle("Blog Entry Not Found");
+        e.setBody("This blog entry does not exist in our database yet.");
+        e.setMore("This blog entry does not exist in our database yet.");
         e.setCreatedon(new Date());
         e.setModifiedOn(new Date());
 
