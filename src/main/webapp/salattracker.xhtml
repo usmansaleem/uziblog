@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/maintemplate.xhtml">
+
+    <ui:define name="title">Salat Tracker</ui:define>
+    <ui:define name="head">
+        <meta name="description" content="Salat Tracker" />
+        <meta name="keywords" content="Usman Saleem, Salat Tracker" />
+    </ui:define>
+    <ui:define name="content">
+    <h:form>
+        <h3>Salat Tracker</h3>
+        <!-- TODO:
+          * Implement event delete
+          * Can we get away with timezone?
+         -->
+        <p:schedule id="schedule" value="#{scheduleView.lazyEventModel}" widgetVar="myschedule" timeZone="GMT+10" draggable="false">
+            <p:ajax event="dateSelect" listener="#{scheduleView.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+        </p:schedule>
+
+        <p:dialog widgetVar="eventDialog" header="Salat Details" showEffect="clip" hideEffect="clip">
+            <h:panelGrid id="eventDetails" columns="2">
+                <h:outputLabel for="title" value="Salat:" />
+                <p:selectOneRadio id="title" value="#{scheduleView.event.title}" required="true">
+                    <f:selectItem itemLabel="Fajar" itemValue="Fajar" />
+                    <f:selectItem itemLabel="Zohar" itemValue="Zohar" />
+                    <f:selectItem itemLabel="Asar" itemValue="Asar" />
+                    <f:selectItem itemLabel="Maghrib" itemValue="Maghrib" />
+                    <f:selectItem itemLabel="Isha" itemValue="Isha" />
+                </p:selectOneRadio>
+
+                <p:commandButton type="reset" value="Reset" />
+                <p:commandButton id="addButton" value="Save" actionListener="#{scheduleView.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+            </h:panelGrid>
+        </p:dialog>
+
+    </h:form>
+
+    </ui:define>
+</ui:composition>
