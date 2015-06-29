@@ -1,13 +1,7 @@
 package info.usmans.blog;
 
-import java.io.Serializable;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -16,9 +10,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.primefaces.model.LazyDataModel;
-import org.primefaces.model.SortOrder;
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is the main backing bean for the JSF front end.
@@ -360,8 +359,17 @@ public class BlogItemJSFController implements Serializable {
 		return "/index.xhtml?faces-redirect=true";
 	}
 
-	public String convertTime(Date date){
+	public String convertTime(Date date) {
 		Format format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-		return format.format(date);
+		String formattedDate = format.format(new Date());
+		try {
+			if (date != null) {
+				formattedDate = format.format(date);
+			}
+		} catch (IllegalArgumentException iae) {
+
+		} finally {
+			return formattedDate;
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package info.usmans.blog.data;
+package info.usmans.blog.view;
 
 /**
  * ScheduleView provides data for our salat tracker
@@ -6,32 +6,32 @@ package info.usmans.blog.data;
  * @author Usman Saleem
  */
 
-import org.primefaces.event.ScheduleEntryMoveEvent;
-import org.primefaces.event.ScheduleEntryResizeEvent;
+import info.usmans.blog.data.SalatSchedulerEJB;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.*;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.inject.Inject;
 import java.io.Serializable;
-import java.util.Calendar;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Salat Scheduler Bean using PrimeFaces Scheuler component.
- *
- * Database table: salattracker(salat_name varchar(10) not null, date_offered date not null)
  */
 @ManagedBean
 @ViewScoped
 public class ScheduleView implements Serializable {
 
+    @Inject
+    private SalatSchedulerEJB salatSchedulerEJB;
     private ScheduleModel eventModel;
-    private ScheduleEvent event = new DefaultScheduleEvent();
+    private DefaultScheduleEvent event = new DefaultScheduleEvent();
 
     /**
      * Initialize from database based on the date range.
@@ -39,24 +39,28 @@ public class ScheduleView implements Serializable {
     @PostConstruct
     public void init() {
         eventModel = new LazyScheduleModel() {
-
             @Override
             public void loadEvents(Date start, Date end) {
-                //TODO: load them from database based on passed date range
-
-            }
-        };
+                try {
+                    List<ScheduleEvent> scheduleEvents = salatSchedulerEJB.loadEvents(start, end);
+                    for (ScheduleEvent scheduleEvent : scheduleEvents) {
+                        addEvent(scheduleEvent);
+                    }
+                }catch (SQLException sqe) {
+                    sqe.printStackTrace();
+                }
+            }};
     }
 
     public ScheduleModel getEventModel() {
         return eventModel;
     }
 
-    public ScheduleEvent getEvent() {
+    public DefaultScheduleEvent getEvent() {
         return event;
     }
 
-    public void setEvent(ScheduleEvent event) {
+    public void setEvent(DefaultScheduleEvent event) {
         this.event = event;
     }
 
@@ -66,13 +70,13 @@ public class ScheduleView implements Serializable {
      */
     public void addEvent(ActionEvent actionEvent) {
         if (event.getId() == null) {
-            eventModel.addEvent(event); //TODO: update in database as well
+            try {
+                salatSchedulerEJB.addEvent(event.getTitle(), event.getStartDate());
+            } catch (SQLException e) {
+               e.printStackTrace();
+            }
         }
-        else {
-            eventModel.updateEvent(event);
-        }
-
-        event = new DefaultScheduleEvent(); //set a clean event after 'Reset' from dialog
+        event = new DefaultScheduleEvent();
     }
 
     /**
@@ -81,7 +85,6 @@ public class ScheduleView implements Serializable {
      * @param selectEvent
      */
     public void onDateSelect(SelectEvent selectEvent) {
-        event = new DefaultScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
+        event = new DefaultScheduleEvent("Fajar", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
     }
-
 }

@@ -33,6 +33,9 @@ public class RewriteConfigurationProvider extends HttpConfigurationProvider {
     @Override
     public Configuration getConfiguration(ServletContext servletContext) {
         return ConfigurationBuilder.begin()
+                //redirect root domain to index.xhtml
+                .addRule(Join.path("/").to("/index.xhtml"))
+
                 // redirect legacy URLs to our new friendly location
                 .addRule()
                 .when(Direction.isInbound()
@@ -51,6 +54,7 @@ public class RewriteConfigurationProvider extends HttpConfigurationProvider {
                 .addRule(Join.path(BLOG_ABOUT_FRIENDLY_PATH).to(ABOUT_XHTML))
                 .addRule(Join.path(BLOG_NOTES_FRIENDLY_PATH).to(NOTES_XHTML))
                 .addRule(Join.path(BLOG_ARCHIVES_FRIENDLY_PATH).to(ARCHIVES_XHTML))
+                .addRule(Join.path("/salat").to("/salattracker.xhtml"))
                 ;
 
     }
