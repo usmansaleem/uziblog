@@ -15,7 +15,6 @@
         <h3>Salat Tracker</h3>
         <!-- TODO:
           * Implement event delete
-          * Can we get away with timezone?
          -->
         <p:growl id="messages" showDetail="true" />
 
@@ -23,16 +22,16 @@
             <p:ajax event="dateSelect" listener="#{scheduleView.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
         </p:schedule>
 
-        <p:dialog widgetVar="eventDialog" header="Salat Details (#{scheduleView.event.startDate})" showEffect="clip" hideEffect="clip" rendered="#{p:ifGranted('blogadmin')}">
+        <p:dialog widgetVar="eventDialog" header="Salat Details (#{scheduleView.selectedDate})" showEffect="clip" hideEffect="clip" rendered="#{p:ifGranted('blogadmin')}">
             <h:panelGrid id="eventDetails" columns="2">
                 <h:outputLabel for="title" value="Salat:" />
-                <p:selectOneMenu id="title" value="#{scheduleView.event.title}" required="true">
-                    <f:selectItem itemLabel="Fajar" itemValue="Fajar" />
-                    <f:selectItem itemLabel="Zohar" itemValue="Zohar" />
-                    <f:selectItem itemLabel="Asar" itemValue="Asar" />
-                    <f:selectItem itemLabel="Maghrib" itemValue="Maghrib" />
-                    <f:selectItem itemLabel="Isha" itemValue="Isha" />
-                </p:selectOneMenu>
+                <p:selectManyCheckbox id="title" value="#{scheduleView.salatEvents}" required="true">
+                    <f:selectItem itemLabel="Fajar" itemValue="1-Fajar" />
+                    <f:selectItem itemLabel="Zohar" itemValue="2-Zohar" />
+                    <f:selectItem itemLabel="Asar" itemValue="3-Asar" />
+                    <f:selectItem itemLabel="Maghrib" itemValue="4-Maghrib" />
+                    <f:selectItem itemLabel="Isha" itemValue="5-Isha" />
+                </p:selectManyCheckbox>
 
                 <p:commandButton id="addButton" value="Save" actionListener="#{scheduleView.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
             </h:panelGrid>

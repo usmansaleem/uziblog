@@ -31,7 +31,8 @@ public class ScheduleView implements Serializable {
     @Inject
     private SalatSchedulerEJB salatSchedulerEJB;
     private ScheduleModel eventModel;
-    private DefaultScheduleEvent event = new DefaultScheduleEvent();
+    private String[] salatEvents = new String[0];
+    private Date selectedDate;
 
     /**
      * Initialize from database based on the date range.
@@ -56,12 +57,20 @@ public class ScheduleView implements Serializable {
         return eventModel;
     }
 
-    public DefaultScheduleEvent getEvent() {
-        return event;
+    public String[] getSalatEvents() {
+        return salatEvents;
     }
 
-    public void setEvent(DefaultScheduleEvent event) {
-        this.event = event;
+    public void setSalatEvents(String[] salatEvents) {
+        this.salatEvents = salatEvents;
+    }
+
+    public Date getSelectedDate() {
+        return selectedDate;
+    }
+
+    public void setSelectedDate(Date selectedDate) {
+        this.selectedDate = selectedDate;
     }
 
     /**
@@ -69,14 +78,13 @@ public class ScheduleView implements Serializable {
      * @param actionEvent
      */
     public void addEvent(ActionEvent actionEvent) {
-        if (event.getId() == null) {
+        for (String salatEvent : salatEvents) {
             try {
-                salatSchedulerEJB.addEvent(event.getTitle(), event.getStartDate());
+                salatSchedulerEJB.addEvent(salatEvent, selectedDate);
             } catch (SQLException e) {
-               e.printStackTrace();
+                e.printStackTrace();
             }
         }
-        event = new DefaultScheduleEvent();
     }
 
     /**
@@ -85,6 +93,6 @@ public class ScheduleView implements Serializable {
      * @param selectEvent
      */
     public void onDateSelect(SelectEvent selectEvent) {
-        event = new DefaultScheduleEvent("Fajar", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
+        this.selectedDate = (Date) selectEvent.getObject();
     }
 }
