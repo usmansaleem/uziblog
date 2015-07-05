@@ -85,6 +85,7 @@ public class ScheduleView implements Serializable {
                 e.printStackTrace();
             }
         }
+        salatEvents = new String[0];
     }
 
     /**
